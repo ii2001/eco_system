@@ -10,3 +10,5 @@
 - [ ] to_do
 - [ ] to_do
 - [ ] to_do
+## 시스템
+- [ ] fps와 update rate 분리 => 배속 기능
