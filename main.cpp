@@ -72,11 +72,12 @@ public:
 // ����
 class Animal {
 private:
+    
     float x;
     float y;
     int direction;
 
-    int hunger;
+    int hunger=10;
     int thirst;
 
     int state = IDLE;
@@ -92,12 +93,11 @@ private:
 
 public:
     Animal(float x, float y) :x(x), y(y) {};
-
     float get_x() { return x; }
     float get_y() { return y; }
     void set_x(float a) { x = a; };
     void set_y(float a) { y = a; };
-
+    
     void update() {
         if (rand() % 100 <= temp) {
             //change state
@@ -125,9 +125,13 @@ public:
         }
     }
 
+
+    //moving_animal
     void move() {
         x += vel_x;
         y += vel_y;
+        hunger -= 1;
+        cout << hunger;
         if (jump == false && jump_frame > 5)
         {
             jump = true;
@@ -139,11 +143,29 @@ public:
             jump_frame = 0;
         }
         jump_frame++;
+
+        if (state == MOVING && hunger < 10) {
+            state == EATING;
+            eatGrass();
+        }
+    }
+
+    // 동물이 풀을 먹는 함수
+    void eatGrass() {
+        // 여기에 풀을 먹는 동작을 추가
+        // 예시로 배경을 검정색으로 변화시키는 것으로 표현
+        std::cout << "Eating grass at (" << x << ", " << y << ")" << std::endl;
+
+        // 예시: 토끼가 있던 배경 색을 검정색으로
+        
+        //**** 이 부분 디버그 오류 자꾸남 어려움 추가 수정 필요할듯
+
+        window.display();
     }
 
     void change_dir() {
         direction = rand() % 360;
-        temp = 0;   
+        temp = 0;
         vel_y = speed * sin(direction * PI / 180);
         vel_x = speed * cos(direction * PI / 180);
         jump = false;
@@ -182,7 +204,7 @@ public:
     //}
     void draw()
     {
-        char rabbit_move[13][14] = { 
+        char rabbit_move[13][14] = {
             {'0', '0', '0', '1', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0'},
             {'0', '0', '1', '2', '1', '2', '1', '0', '0', '0', '0', '0', '0', '0'},
             {'0', '0', '1', '3', '1', '3', '1', '0', '0', '0', '0', '0', '0', '0'},
@@ -198,7 +220,7 @@ public:
             {'0', '0', '1', '1', '1', '0', '0', '0', '1', '1', '1', '1', '1', '1'} };
 
 
-        char rabbit_jump[14][16] = { 
+        char rabbit_jump[14][16] = {
             {'0', '0', '0', '1', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'},
             {'0', '0', '1', '2', '1', '2', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0'},
             {'0', '0', '1', '3', '1', '3', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0'},
@@ -215,7 +237,7 @@ public:
             {'0', '0', '0', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0', '1', '1', '1'} };
 
 
-        char rabbit_back[16][13] = { 
+        char rabbit_back[16][13] = {
             {'0', '1', '1', '0', '0', '0', '0', '0', '0', '0', '1', '1', '0'},
             {'0', '1', '2', '1', '0', '0', '0', '0', '0', '1', '2', '1', '0'},
             {'0', '1', '3', '2', '1', '0', '0', '0', '1', '2', '3', '1', '0'},
@@ -233,8 +255,8 @@ public:
             {'0', '0', '1', '1', '1', '2', '2', '2', '1', '1', '1', '0', '0'},
             {'0', '0', '0', '0', '0', '1', '1', '1', '0', '0', '0', '0', '0'} };
 
-        
-        char rabbit_back_jump[19][13] = { 
+
+        char rabbit_back_jump[19][13] = {
             {'0', '1', '1', '0', '0', '1', '0', '1', '0', '0', '1', '1', '0'},
             {'0', '1', '2', '1', '1', '2', '1', '2', '1', '1', '2', '1', '0'},
             {'0', '1', '3', '2', '1', '2', '1', '2', '1', '2', '3', '1', '0'},
@@ -256,7 +278,7 @@ public:
             {'0', '0', '1', '1', '0', '0', '0', '0', '0', '1', '1', '0', '0'} };
 
 
-        char rabbit_front[17][13] = { 
+        char rabbit_front[17][13] = {
             {'1', '1', '0', '0', '0', '0', '0', '1', '1', '0', '0', '0', '0'},
             {'1', '2', '1', '0', '0', '0', '1', '2', '1', '0', '0', '0', '0'},
             {'1', '3', '2', '1', '0', '1', '2', '3', '1', '0', '0', '0', '0'},
@@ -275,8 +297,8 @@ public:
             {'1', '1', '2', '2', '1', '2', '2', '1', '2', '2', '1', '0', '0'},
             {'0', '1', '1', '1', '1', '1', '1', '1', '1', '1', '0', '0', '0'} };
 
-        
-        char rabbit_front_jump[14][13] = { 
+
+        char rabbit_front_jump[14][13] = {
             {'0', '0', '0', '1', '1', '0', '0', '0', '1', '1', '0', '0', '0'},
             {'0', '0', '0', '1', '2', '1', '1', '1', '2', '1', '0', '0', '0'},
             {'0', '0', '0', '1', '2', '2', '2', '2', '2', '1', '0', '0', '0'},
@@ -293,7 +315,7 @@ public:
             {'0', '1', '1', '1', '1', '0', '0', '0', '1', '1', '1', '1', '0'} };
 
 
-        if ((direction<45)||(direction>315)) // ������
+        if ((direction < 45) || (direction > 315)) // ������
         {
             if (!jump) // ���� x
             {
@@ -605,7 +627,7 @@ int main()
     Animal* selected;
     selected = &rabbits[0];
 
-    sf::RectangleShape select_rect(sf::Vector2f(0.0,0.0));
+    sf::RectangleShape select_rect(sf::Vector2f(0.0, 0.0));
     select_rect.setSize(sf::Vector2f(40.0, 40.0));
     select_rect.setOutlineColor(sf::Color::Red);
     select_rect.setOutlineThickness(2.0);
@@ -641,15 +663,18 @@ int main()
             {
                 UPDATE_TIME = 30;
                 speed = 1;
-            } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
+            }
+            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
             {
                 UPDATE_TIME = 15;
                 speed = 2;
-            } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3))
+            }
+            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3))
             {
                 UPDATE_TIME = 10;
                 speed = 3;
-            }else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4))
+            }
+            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4))
             {
                 UPDATE_TIME = 7;
                 speed = 4;
@@ -674,7 +699,7 @@ int main()
                         is_clicked = false;
                     }
                 }
-                
+
             }
             is_clicked = false;
 
@@ -700,7 +725,7 @@ int main()
             //debug("day", world.get_day());
             //debug("time", world.get_time());
             //debug("frame", world.get_frame());
-            debug("selected_x",selected->get_x());
+            debug("selected_x", selected->get_x());
             debug("selected_y", selected->get_y());
             debug("fps", fps);
             debug("speed", speed);
@@ -714,6 +739,5 @@ int main()
         }
 
     }
-
     return 0;
 }
