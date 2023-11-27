@@ -20,85 +20,29 @@ using namespace std;
 sf::RenderWindow window(sf::VideoMode(1200, 800), "My window");
 const double PI = 3.1415926;
 
+int debug_count = 0;
+
 // DEBUG
-class Function {
-public:
-    Function() {};
-    Function(int value()) {
-        ptr = value;
-    };
-    int(*ptr) ();
-};
-
-class Debug {
-private:
-    vector<bool> is_func;
-    vector<Function> funcs;
-    vector<string> names;
-    vector<int*>  values;
-    vector<sf::Text *> texts;
-
+void debug(string name, int value) {
     sf::Font font;
-    
-public:
-    Debug() {
-        if (!font.loadFromFile("arial.ttf")) {
-            cout << "failed to loat font file" << endl;
-        }
-    };
-    void null_func(){}
-    void add(string name, int* value) {
-        sf::Text * text = new sf::Text;
+    font.loadFromFile("arial.ttf");
 
-        text->setFont(font);
-        text->setPosition(0, texts.size() * 24);
-        text->setCharacterSize(24);
-        text->setFillColor(sf::Color::White);
-        text->setOutlineColor(sf::Color::Black);
-        text->setOutlineThickness(2);
-        text->setStyle(sf::Text::Bold);
-        text->setString(name + ':' + to_string(*value));
-        
-        is_func.push_back(false);
-        funcs.push_back(Function());
-        texts.push_back(text);
-        names.push_back(name);
-        values.push_back(value);
-    }
+    sf::Text text;
+    text.setFont(font);
+    text.setPosition(0, debug_count * 24);
+    text.setCharacterSize(24);
+    text.setFillColor(sf::Color::White);
+    text.setOutlineColor(sf::Color::Black);
+    text.setOutlineThickness(2);
+    text.setStyle(sf::Text::Bold);
 
-    void add(string name, int func()) {
-        sf::Text* text = new sf::Text;
+    text.setString(name + ":" + to_string(value));
 
-        text->setFont(font);
-        text->setPosition(0, texts.size() * 24);
-        text->setCharacterSize(24);
-        text->setFillColor(sf::Color::White);
-        text->setOutlineColor(sf::Color::Black);
-        text->setOutlineThickness(2);
-        text->setStyle(sf::Text::Bold);
+    debug_count++;
+    window.draw(text);
+}
 
-        is_func.push_back(true);
-        funcs.push_back(Function(func));
-        texts.push_back(text);
-        names.push_back(name);
-        values.push_back(0);
-    }
-    void draw() {
-        for (int i = 0; i < texts.size(); i++) {
-            if (is_func[i]) {
-                texts[i]->setString(names[i] + ':' + to_string(funcs[i].ptr()));
-                window.draw(*texts[i]);
-            }
-            else {
-                texts[i]->setString(names[i] + ':' + to_string(*values[i]));
-                window.draw(*texts[i]);
-            }   
-        }
-    }
-};
-
-
-// »Ø∞Ê
+// ÌôòÍ≤Ω
 class World {
 private:
     int day = 0;
@@ -125,7 +69,7 @@ public:
     int get_day() { return day; };
 };
 
-// µøπ∞
+// ÎèôÎ¨º
 class Animal {
 private:
     float x;
@@ -199,19 +143,18 @@ public:
 
     void change_dir() {
         direction = rand() % 360;
-        temp = 0;   
+        temp = 0;
         vel_y = speed * sin(direction * PI / 180);
         vel_x = speed * cos(direction * PI / 180);
         jump = false;
         jump_frame = 0;
     }
 
-    /*
-    void draw() {
-        sf::CircleShape shape(20);
-        sf::CircleShape s1(7);
-        sf::CircleShape s2(7);
-        
+    //void draw() {
+        //sf::CircleShape shape(20);
+        //sf::CircleShape s1(7);
+        //sf::CircleShape s2(7);
+        /*
         unsigned char a[728] = { 94, 161, 82, 255, 94, 161, 82, 255, 0, 0, 0, 255, 94, 161, 82, 255, 0, 0, 0, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 0, 0, 0, 255, 255, 255, 255, 255, 0, 0, 0, 255, 255, 255, 255, 255, 0, 0, 0, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 0, 0, 0, 255, 255, 130, 255, 255, 0, 0, 0, 255, 255, 130, 255, 255, 0, 0, 0, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 0, 0, 0, 255, 255, 255, 255, 255, 0, 0, 0, 255, 255, 130, 255, 255, 0, 0, 0, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 130, 255, 255, 0, 0, 0, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 130, 255, 255, 0, 0, 0, 255, 0, 0, 0, 255, 0, 0, 0, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 130, 255, 255, 255, 130, 255, 255, 255, 255, 255, 255, 0, 0, 0, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 130, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 130, 255, 255, 255, 130, 255, 255, 0, 0, 0, 255, 0, 0, 0, 255, 0, 0, 0, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 130, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 130, 255, 255, 255, 255, 255, 255, 255, 130, 255, 255, 0, 0, 0, 255, 255, 255, 255, 255, 0, 0, 0, 255, 94, 161, 82, 255, 0, 0, 0, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 130, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 130, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 130, 255, 255, 0, 0, 0, 255, 0, 0, 0, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 0, 0, 0, 255, 255, 130, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 130, 255, 255, 0, 0, 0, 255, 0, 0, 0, 255, 255, 130, 255, 255, 255, 130, 255, 255, 255, 130, 255, 255, 0, 0, 0, 255, 94, 161, 82, 255, 94, 161, 82, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 0, 255, 0, 0, 0, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 0, 255, 94, 161, 82, 255, 94, 161, 82, 255, 0, 0, 0, 255, 0, 0, 0, 255, 0, 0, 0, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 0, 0, 0, 255, 0, 0, 0, 255, 0, 0, 0, 255, 0, 0, 0, 255, 0, 0, 0, 255, 0, 0, 0, 255 };
         sf::Texture texture;
         texture.create(13, 14);
@@ -225,22 +168,21 @@ public:
         rabbit_shape.setTexture(&texture);
         rabbit_shape.setPosition(x, y);
         window.draw(rabbit_shape);
-        
-        shape.setPosition(x, y);
-        shape.setFillColor(sf::Color(255, 255, 0));
-        s1.setPosition(x, y - 10);
-        s2.setPosition(x + 26, y - 10);
+        */
+        //shape.setPosition(x, y);
+        //shape.setFillColor(sf::Color(255, 255, 0));
+        //s1.setPosition(x, y - 10);
+        //s2.setPosition(x + 26, y - 10);
 
-        window.draw(shape);
-        window.draw(s1);
-        window.draw(s2);
-        sf::RectangleShape rab[13][14];
+        //window.draw(shape);
+        //window.draw(s1);
+        //window.draw(s2);
+        //sf::RectangleShape rab[13][14];
 
-    }
-    */
+    //}
     void draw()
     {
-        char rabbit_move[13][14] = { 
+        char rabbit_move[13][14] = {
             {'0', '0', '0', '1', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0'},
             {'0', '0', '1', '2', '1', '2', '1', '0', '0', '0', '0', '0', '0', '0'},
             {'0', '0', '1', '3', '1', '3', '1', '0', '0', '0', '0', '0', '0', '0'},
@@ -256,7 +198,7 @@ public:
             {'0', '0', '1', '1', '1', '0', '0', '0', '1', '1', '1', '1', '1', '1'} };
 
 
-        char rabbit_jump[14][16] = { 
+        char rabbit_jump[14][16] = {
             {'0', '0', '0', '1', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'},
             {'0', '0', '1', '2', '1', '2', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0'},
             {'0', '0', '1', '3', '1', '3', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0'},
@@ -273,7 +215,7 @@ public:
             {'0', '0', '0', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0', '1', '1', '1'} };
 
 
-        char rabbit_back[16][13] = { 
+        char rabbit_back[16][13] = {
             {'0', '1', '1', '0', '0', '0', '0', '0', '0', '0', '1', '1', '0'},
             {'0', '1', '2', '1', '0', '0', '0', '0', '0', '1', '2', '1', '0'},
             {'0', '1', '3', '2', '1', '0', '0', '0', '1', '2', '3', '1', '0'},
@@ -291,8 +233,8 @@ public:
             {'0', '0', '1', '1', '1', '2', '2', '2', '1', '1', '1', '0', '0'},
             {'0', '0', '0', '0', '0', '1', '1', '1', '0', '0', '0', '0', '0'} };
 
-        
-        char rabbit_back_jump[19][13] = { 
+
+        char rabbit_back_jump[19][13] = {
             {'0', '1', '1', '0', '0', '1', '0', '1', '0', '0', '1', '1', '0'},
             {'0', '1', '2', '1', '1', '2', '1', '2', '1', '1', '2', '1', '0'},
             {'0', '1', '3', '2', '1', '2', '1', '2', '1', '2', '3', '1', '0'},
@@ -314,7 +256,7 @@ public:
             {'0', '0', '1', '1', '0', '0', '0', '0', '0', '1', '1', '0', '0'} };
 
 
-        char rabbit_front[17][13] = { 
+        char rabbit_front[17][13] = {
             {'1', '1', '0', '0', '0', '0', '0', '1', '1', '0', '0', '0', '0'},
             {'1', '2', '1', '0', '0', '0', '1', '2', '1', '0', '0', '0', '0'},
             {'1', '3', '2', '1', '0', '1', '2', '3', '1', '0', '0', '0', '0'},
@@ -333,8 +275,8 @@ public:
             {'1', '1', '2', '2', '1', '2', '2', '1', '2', '2', '1', '0', '0'},
             {'0', '1', '1', '1', '1', '1', '1', '1', '1', '1', '0', '0', '0'} };
 
-        
-        char rabbit_front_jump[14][13] = { 
+
+        char rabbit_front_jump[14][13] = {
             {'0', '0', '0', '1', '1', '0', '0', '0', '1', '1', '0', '0', '0'},
             {'0', '0', '0', '1', '2', '1', '1', '1', '2', '1', '0', '0', '0'},
             {'0', '0', '0', '1', '2', '2', '2', '2', '2', '1', '0', '0', '0'},
@@ -351,9 +293,9 @@ public:
             {'0', '1', '1', '1', '1', '0', '0', '0', '1', '1', '1', '1', '0'} };
 
 
-        if ((direction<45)||(direction>315)) // ø¿∏•¬ 
+        if ((direction < 45) || (direction > 315)) // Ïò§Î•∏Ï™Ω
         {
-            if (!jump) // ¡°«¡ x
+            if (!jump) // Ï†êÌîÑ x
             {
                 for (int i = 0; i < 13; i++)
                 {
@@ -382,7 +324,7 @@ public:
                     }
                 }
             }
-            else // ¡°«¡ 0
+            else // Ï†êÌîÑ 0
             {
                 for (int i = 0; i < 14; i++)
                 {
@@ -412,9 +354,9 @@ public:
                 }
             }
         }
-        else if ((direction >= 135) && (direction <= 225)) // øﬁ¬ 
+        else if ((direction >= 135) && (direction <= 225)) // ÏôºÏ™Ω
         {
-            if (!jump) // ¡°«¡ x
+            if (!jump) // Ï†êÌîÑ x
             {
                 for (int i = 0; i < 13; i++)
                 {
@@ -443,7 +385,7 @@ public:
                     }
                 }
             }
-            else // ¡°«¡ 0
+            else // Ï†êÌîÑ 0
             {
                 for (int i = 0; i < 14; i++)
                 {
@@ -473,9 +415,9 @@ public:
                 }
             }
         }
-        else if ((direction >= 225) && (direction <= 315)) // ¿ß¬ 
+        else if ((direction >= 225) && (direction <= 315)) // ÏúÑÏ™Ω
         {
-            if (!jump) // ¡°«¡ x
+            if (!jump) // Ï†êÌîÑ x
             {
                 for (int i = 0; i < 16; i++)
                 {
@@ -504,7 +446,7 @@ public:
                     }
                 }
             }
-            else // ¡°«¡ 0
+            else // Ï†êÌîÑ 0
             {
                 for (int i = 0; i < 16; i++)
                 {
@@ -534,9 +476,9 @@ public:
                 }
             }
         }
-        else if ((direction >= 45) && (direction <= 135)) // æ∆∑°¬ 
+        else if ((direction >= 45) && (direction <= 135)) // ÏïÑÎûòÏ™Ω
         {
-            if (!jump) // ¡°«¡ x
+            if (!jump) // Ï†êÌîÑ x
             {
                 for (int i = 0; i < 17; i++)
                 {
@@ -565,7 +507,7 @@ public:
                     }
                 }
             }
-            else // ¡°«¡ 0
+            else // Ï†êÌîÑ 0
             {
                 for (int i = 0; i < 14; i++)
                 {
@@ -596,7 +538,7 @@ public:
             }
         }
     }
-    
+
     void print_status() {
         printf("vel_x : %f\n", vel_x);
         printf("vel_y : %f\n", vel_y);
@@ -604,7 +546,7 @@ public:
 
 };
 
-// √ Ωƒµøπ∞
+// Ï¥àÏãùÎèôÎ¨º
 class Herbivore : public Animal {
 private:
 
@@ -612,12 +554,12 @@ public:
     Herbivore(float x, float y) :Animal(x, y) {};
 };
 
-// ¿∞Ωƒµøπ∞
+// Ïú°ÏãùÎèôÎ¨º
 class Carnivore : public Animal {
 
 };
 
-// ¿‚Ωƒµøπ∞
+// Ïû°ÏãùÎèôÎ¨º
 class Omnivore : public Animal {
 
 };
@@ -629,8 +571,7 @@ public:
     Rabbit(float x, float y) :Herbivore(x, y) {};
 
 };
-
-//¿⁄ø¨ »Ø∞Ê
+//ÏûêÏó∞ ÌôòÍ≤Ω
 class environment {
 private:
 protected:
@@ -650,7 +591,7 @@ public:
 
 };
 
-// «Æ
+// ÌíÄ
 class grass : public environment {
 private:
     bool hasEaten = false;
@@ -661,13 +602,34 @@ public:
     void setHasEaten() {
         hasEaten = true;
     }
-
     void draw() override {
+        sf::RectangleShape shape_g(sf::Vector2f(2, 2));
+        shape_g.setFillColor(sf::Color(0, 144, 0));
         if (!hasEaten) {
-            sf::RectangleShape grassShape;
-            grassShape.setSize(sf::Vector2f(10, 10));
-            grassShape.setPosition(x, y);
-            window.draw(grassShape);
+            char grass_left[13][14] = {
+    {'0', '0', '1', '0', '0', '0', '0', '1', '0', '0', '1', '0', '0', '0'},
+    {'0', '0', '1', '0', '0', '0', '1', '0', '0', '0', '1', '0', '0', '0'},
+    {'0', '1', '1', '0', '0', '0', '1', '0', '0', '0', '1', '0', '0', '0'},
+    {'0', '1', '1', '0', '0', '1', '1', '0', '0', '1', '1', '0', '0', '0'},
+    {'0', '1', '1', '0', '0', '1', '1', '0', '0', '1', '1', '1', '0', '0'},
+    {'1', '2', '1', '0', '0', '1', '2', '1', '0', '1', '1', '1', '0', '0'},
+    {'1', '2', '1', '0', '0', '1', '2', '2', '0', '2', '1', '1', '0', '0'},
+    {'1', '3', '1', '0', '0', '1', '2', '2', '0', '2', '2', '1', '1', '0'},
+    {'1', '2', '1', '0', '0', '1', '2', '2', '0', '0', '2', '1', '2', '0'},
+    {'0', '1', '1', '1', '1', '1', '2', '2', '1', '1', '2', '2', '1', '0'},
+    {'0', '1', '1', '1', '1', '1', '2', '2', '1', '1', '2', '2', '2', '0'},
+    {'0', '1', '1', '2', '1', '1', '1', '1', '2', '2', '2', '2', '2', '0'},
+    {'0', '0', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '0', '0'} };
+            sf::RectangleShape grass;
+            for (int i = 0; i < 13; i++) {
+                for (int j = 0; j < 14; j++) {
+                    if (grass_left[i][j] != '0') {
+                        shape_g.setPosition(x + j * 2, y + i * 2);
+                        window.draw(shape_g);
+                    }
+                }
+            }
+
         }
     }
 };
@@ -688,7 +650,6 @@ int main()
     int update_clock_delta;
     int draw_clock_delta;
     int fps;
-    int tps;
 
     // COLORS
     sf::Color color_grass = sf::Color(94, 161, 82);
@@ -696,23 +657,22 @@ int main()
     // INIT
     World world = World();
 
-    vector<grass> grasses = {};
-    vector<grass>::iterator g_iter;
-    for (int i = 0; i < 10; i++) {
-        grasses.push_back(grass(rand() % 1200, rand() % 800));
-    }
-    
     vector<Rabbit> rabbits = {};
     vector<Rabbit>::iterator r_iter;
     for (int i = 0; i < 10; i++) {
         rabbits.push_back(Rabbit(rand() % 1200, rand() % 800));
+    }
+    vector<grass> grasses = {};
+    vector<grass>::iterator g_iter;
+    for (int i = 0; i < 10; i++) {
+        grasses.push_back(grass(rand() % 1200, rand() % 800));
     }
 
     // SELECT
     Animal* selected;
     selected = &rabbits[0];
 
-    sf::RectangleShape select_rect(sf::Vector2f(0.0,0.0));
+    sf::RectangleShape select_rect(sf::Vector2f(0.0, 0.0));
     select_rect.setSize(sf::Vector2f(40.0, 40.0));
     select_rect.setOutlineColor(sf::Color::Red);
     select_rect.setOutlineThickness(2.0);
@@ -722,16 +682,6 @@ int main()
     sf::Vector2i mouse_position;
     bool is_clicked = false;
 
-    // DEBUG
-    Debug debug = Debug();
-    //debug("day", world.get_day());
-    //debug("time", world.get_time());
-    //debug("frame", world.get_frame());
-    //debug("selected_x",selected->get_x());
-    //debug.add("selected_y", selected->get_y);
-    debug.add("tps", &tps);
-    debug.add("fps", &fps);
-    //debug("speed", speed);
     // MAIN LOOP
     while (window.isOpen())
     {
@@ -758,15 +708,18 @@ int main()
             {
                 UPDATE_TIME = 30;
                 speed = 1;
-            } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
+            }
+            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
             {
                 UPDATE_TIME = 15;
                 speed = 2;
-            } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3))
+            }
+            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3))
             {
                 UPDATE_TIME = 10;
                 speed = 3;
-            }else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4))
+            }
+            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4))
             {
                 UPDATE_TIME = 7;
                 speed = 4;
@@ -776,7 +729,6 @@ int main()
         curr_clock = clock();
         update_clock_delta = curr_clock - update_prev_clock;
         if ((update_clock_delta >= UPDATE_TIME) && (UPDATE_TIME != 0)) {
-            tps = 1000.0 / update_clock_delta;
             update_prev_clock = curr_clock;
 
             // update all
@@ -792,7 +744,7 @@ int main()
                         is_clicked = false;
                     }
                 }
-                
+
             }
             is_clicked = false;
 
@@ -804,16 +756,30 @@ int main()
             draw_prev_clock = curr_clock;
             fps = 1000.0 / draw_clock_delta;
 
+            // clear the window with black color
             window.clear(color_grass);
+
             // draw everything here...
             for (r_iter = rabbits.begin(); r_iter != rabbits.end(); r_iter++) {
                 r_iter->draw();
             }
+            window.draw(select_rect);
+            // draw grasses
             for (g_iter = grasses.begin(); g_iter != grasses.end(); g_iter++) {
                 g_iter->draw();
             }
-            window.draw(select_rect);
-            debug.draw();
+
+
+            // debug
+            debug_count = 0;
+            //debug("day", world.get_day());
+            //debug("time", world.get_time());
+            //debug("frame", world.get_frame());
+            debug("selected_x", selected->get_x());
+            debug("selected_y", selected->get_y());
+            debug("fps", fps);
+            debug("speed", speed);
+
             //console output
             //cout << "day: " << world.get_day() << std::endl;
             //cout << "time: " << world.get_time() << std::endl;
