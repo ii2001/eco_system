@@ -42,7 +42,7 @@ void debug(string name, int value) {
     window.draw(text);
 }
 
-// ȯ��
+// 환경
 class World {
 private:
     int day = 0;
@@ -69,15 +69,14 @@ public:
     int get_day() { return day; };
 };
 
-// ����
+// 동물
 class Animal {
 private:
-    
     float x;
     float y;
     int direction;
 
-    int hunger=10;
+    int hunger;
     int thirst;
 
     int state = IDLE;
@@ -93,11 +92,12 @@ private:
 
 public:
     Animal(float x, float y) :x(x), y(y) {};
+
     float get_x() { return x; }
     float get_y() { return y; }
     void set_x(float a) { x = a; };
     void set_y(float a) { y = a; };
-    
+
     void update() {
         if (rand() % 100 <= temp) {
             //change state
@@ -125,13 +125,9 @@ public:
         }
     }
 
-
-    //moving_animal
     void move() {
         x += vel_x;
         y += vel_y;
-        hunger -= 1;
-        cout << hunger;
         if (jump == false && jump_frame > 5)
         {
             jump = true;
@@ -143,24 +139,6 @@ public:
             jump_frame = 0;
         }
         jump_frame++;
-
-        if (state == MOVING && hunger < 10) {
-            state == EATING;
-            eatGrass();
-        }
-    }
-
-    // 동물이 풀을 먹는 함수
-    void eatGrass() {
-        // 여기에 풀을 먹는 동작을 추가
-        // 예시로 배경을 검정색으로 변화시키는 것으로 표현
-        std::cout << "Eating grass at (" << x << ", " << y << ")" << std::endl;
-
-        // 예시: 토끼가 있던 배경 색을 검정색으로
-        
-        //**** 이 부분 디버그 오류 자꾸남 어려움 추가 수정 필요할듯
-
-        window.display();
     }
 
     void change_dir() {
@@ -315,9 +293,9 @@ public:
             {'0', '1', '1', '1', '1', '0', '0', '0', '1', '1', '1', '1', '0'} };
 
 
-        if ((direction < 45) || (direction > 315)) // ������
+        if ((direction < 45) || (direction > 315)) // 오른쪽
         {
-            if (!jump) // ���� x
+            if (!jump) // 점프 x
             {
                 for (int i = 0; i < 13; i++)
                 {
@@ -346,7 +324,7 @@ public:
                     }
                 }
             }
-            else // ���� 0
+            else // 점프 0
             {
                 for (int i = 0; i < 14; i++)
                 {
@@ -376,9 +354,9 @@ public:
                 }
             }
         }
-        else if ((direction >= 135) && (direction <= 225)) // ����
+        else if ((direction >= 135) && (direction <= 225)) // 왼쪽
         {
-            if (!jump) // ���� x
+            if (!jump) // 점프 x
             {
                 for (int i = 0; i < 13; i++)
                 {
@@ -407,7 +385,7 @@ public:
                     }
                 }
             }
-            else // ���� 0
+            else // 점프 0
             {
                 for (int i = 0; i < 14; i++)
                 {
@@ -437,9 +415,9 @@ public:
                 }
             }
         }
-        else if ((direction >= 225) && (direction <= 315)) // ����
+        else if ((direction >= 225) && (direction <= 315)) // 위쪽
         {
-            if (!jump) // ���� x
+            if (!jump) // 점프 x
             {
                 for (int i = 0; i < 16; i++)
                 {
@@ -468,7 +446,7 @@ public:
                     }
                 }
             }
-            else // ���� 0
+            else // 점프 0
             {
                 for (int i = 0; i < 16; i++)
                 {
@@ -498,9 +476,9 @@ public:
                 }
             }
         }
-        else if ((direction >= 45) && (direction <= 135)) // �Ʒ���
+        else if ((direction >= 45) && (direction <= 135)) // 아래쪽
         {
-            if (!jump) // ���� x
+            if (!jump) // 점프 x
             {
                 for (int i = 0; i < 17; i++)
                 {
@@ -529,7 +507,7 @@ public:
                     }
                 }
             }
-            else // ���� 0
+            else // 점프 0
             {
                 for (int i = 0; i < 14; i++)
                 {
@@ -568,7 +546,7 @@ public:
 
 };
 
-// �ʽĵ���
+// 초식동물
 class Herbivore : public Animal {
 private:
 
@@ -576,12 +554,12 @@ public:
     Herbivore(float x, float y) :Animal(x, y) {};
 };
 
-// ���ĵ���
+// 육식동물
 class Carnivore : public Animal {
 
 };
 
-// ��ĵ���
+// 잡식동물
 class Omnivore : public Animal {
 
 };
@@ -592,6 +570,47 @@ private:
 public:
     Rabbit(float x, float y) :Herbivore(x, y) {};
 
+};
+//자연 환경
+class environment {
+private:
+protected:
+    float x;
+    float y;
+public:
+    environment(float x, float y) :x(x), y(y) {};
+
+    virtual void draw() {
+        sf::RectangleShape grass;
+        grass.setSize(sf::Vector2f(10, 10));
+
+        grass.setPosition(x, y);
+
+        window.draw(grass);
+    }
+
+};
+
+// 풀
+class grass : public environment {
+private:
+    bool hasEaten = false;
+
+public:
+    grass(float x, float y) : environment(x, y), hasEaten(false) {};
+
+    void setHasEaten() {
+        hasEaten = true;
+    }
+
+    void draw() override {
+        if (!hasEaten) {
+            sf::RectangleShape grassShape;
+            grassShape.setSize(sf::Vector2f(10, 10));
+            grassShape.setPosition(x, y);
+            window.draw(grassShape);
+        }
+    }
 };
 
 int main()
@@ -621,6 +640,11 @@ int main()
     vector<Rabbit>::iterator r_iter;
     for (int i = 0; i < 10; i++) {
         rabbits.push_back(Rabbit(rand() % 1200, rand() % 800));
+    }
+    vector<grass> grasses = {};
+    vector<grass>::iterator g_iter;
+    for (int i = 0; i < 10; i++) {
+        grasses.push_back(grass(rand() % 1200, rand() % 800));
     }
 
     // SELECT
@@ -719,6 +743,11 @@ int main()
                 r_iter->draw();
             }
             window.draw(select_rect);
+            // draw grasses
+            for (g_iter = grasses.begin(); g_iter != grasses.end(); g_iter++) {
+                g_iter->draw();
+            }
+
 
             // debug
             debug_count = 0;
@@ -739,5 +768,6 @@ int main()
         }
 
     }
+
     return 0;
 }
