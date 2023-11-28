@@ -1,7 +1,7 @@
 # eco_system
 
 ## 공통
-- world에 윈도우, 전체 entity vector 배열 있습니다
+- world에 윈도우, 전체 entity vector 배열 있습니다 entity 생성하고 여따 추가하면 update, draw 자동으로 됨
 - 전역 변수로 필요한 것들 world 클래스에 추가하고 필요한 파일에 include 해서 사용하시면 됩니당
 
 ## 환경파트
