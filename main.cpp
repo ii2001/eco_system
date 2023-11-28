@@ -1,24 +1,8 @@
-#include <iostream>
-#include <vector>
-#include <cstdlib>
-#include <ctime>
-#include <string>
-#include <math.h>
-#include <random>
-#include <SFML/Graphics.hpp>
-
-using namespace std;
-
-//ANIMAL STATES
-#define IDLE 0
-#define SLEEP 1
-#define EATING 2
-#define MOVING 3
-
-// GLOBAL VARIABLES
-// create the window
-sf::RenderWindow window(sf::VideoMode(1200, 800), "My window");
-const double PI = 3.1415926;
+﻿#include "EcoSystem.h"
+#include "Camera.h"
+#include "Entity.h"
+#include "Animal.h"
+#include "World.h"
 
 int debug_count = 0;
 
@@ -39,514 +23,14 @@ void debug(string name, int value) {
     text.setString(name + ":" + to_string(value));
 
     debug_count++;
-    window.draw(text);
+    world.window->draw(text);
 }
 
-// 환경
-class World {
-private:
-    int day = 0;
-    int time = 0;
-    int frame = 0;
-public:
-    World() {};
 
-    void update() {
-        frame++;
-        if (frame >= 25) {
-            time += 1;
-            frame = 0;
-        }
-
-        if (time >= 24) {
-            day += 1;
-            time = 0;
-        }
-    }
-
-    int get_frame() { return frame; };
-    int get_time() { return time; };
-    int get_day() { return day; };
-};
-
-// 동물
-class Animal {
-private:
-    float x;
-    float y;
-    int direction;
-
-    int hunger;
-    int thirst;
-
-    int state = IDLE;
-
-    float speed = 3.0;
-    float vel_x = 3.0;
-    float vel_y = 0.0;
-
-    int temp = 0;
-
-    bool jump = false;
-    int jump_frame = 0;
-
-public:
-    Animal(float x, float y) :x(x), y(y) {};
-
-    float get_x() { return x; }
-    float get_y() { return y; }
-    void set_x(float a) { x = a; };
-    void set_y(float a) { y = a; };
-
-    void update() {
-        if (rand() % 100 <= temp) {
-            //change state
-            if (state == IDLE) {
-                change_dir();
-                state = MOVING;
-            }
-            else {
-                state = IDLE;
-            }
-        }
-        else {
-            temp++;
-            switch (state)
-            {
-            case IDLE:
-                jump = false;
-                break;
-            case MOVING:
-                move();
-                break;
-            default:
-                break;
-            }
-        }
-    }
-
-    void move() {
-        x += vel_x;
-        y += vel_y;
-        if (jump == false && jump_frame > 5)
-        {
-            jump = true;
-            jump_frame = 0;
-        }
-        else if (jump == true && jump_frame > 10)
-        {
-            jump = false;
-            jump_frame = 0;
-        }
-        jump_frame++;
-    }
-
-    void change_dir() {
-        direction = rand() % 360;
-        temp = 0;
-        vel_y = speed * sin(direction * PI / 180);
-        vel_x = speed * cos(direction * PI / 180);
-        jump = false;
-        jump_frame = 0;
-    }
-
-    //void draw() {
-        //sf::CircleShape shape(20);
-        //sf::CircleShape s1(7);
-        //sf::CircleShape s2(7);
-        /*
-        unsigned char a[728] = { 94, 161, 82, 255, 94, 161, 82, 255, 0, 0, 0, 255, 94, 161, 82, 255, 0, 0, 0, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 0, 0, 0, 255, 255, 255, 255, 255, 0, 0, 0, 255, 255, 255, 255, 255, 0, 0, 0, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 0, 0, 0, 255, 255, 130, 255, 255, 0, 0, 0, 255, 255, 130, 255, 255, 0, 0, 0, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 0, 0, 0, 255, 255, 255, 255, 255, 0, 0, 0, 255, 255, 130, 255, 255, 0, 0, 0, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 130, 255, 255, 0, 0, 0, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 130, 255, 255, 0, 0, 0, 255, 0, 0, 0, 255, 0, 0, 0, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 130, 255, 255, 255, 130, 255, 255, 255, 255, 255, 255, 0, 0, 0, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 130, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 130, 255, 255, 255, 130, 255, 255, 0, 0, 0, 255, 0, 0, 0, 255, 0, 0, 0, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 130, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 130, 255, 255, 255, 255, 255, 255, 255, 130, 255, 255, 0, 0, 0, 255, 255, 255, 255, 255, 0, 0, 0, 255, 94, 161, 82, 255, 0, 0, 0, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 130, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 130, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 130, 255, 255, 0, 0, 0, 255, 0, 0, 0, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 0, 0, 0, 255, 255, 130, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 130, 255, 255, 0, 0, 0, 255, 0, 0, 0, 255, 255, 130, 255, 255, 255, 130, 255, 255, 255, 130, 255, 255, 0, 0, 0, 255, 94, 161, 82, 255, 94, 161, 82, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 0, 255, 0, 0, 0, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 0, 255, 94, 161, 82, 255, 94, 161, 82, 255, 0, 0, 0, 255, 0, 0, 0, 255, 0, 0, 0, 255, 94, 161, 82, 255, 94, 161, 82, 255, 94, 161, 82, 255, 0, 0, 0, 255, 0, 0, 0, 255, 0, 0, 0, 255, 0, 0, 0, 255, 0, 0, 0, 255, 0, 0, 0, 255 };
-        sf::Texture texture;
-        texture.create(13, 14);
-        sf::Uint8* pixels = new sf::Uint8[14 * 13 * 4]; // * 4 because pixels have 4 components (RGBA)
-        for (int i = 0; i < 728; i += 4)
-        {
-            pixels[i] = a[i];
-        }
-        texture.update(pixels);
-        sf::RectangleShape rabbit_shape(sf::Vector2f(13, 14));
-        rabbit_shape.setTexture(&texture);
-        rabbit_shape.setPosition(x, y);
-        window.draw(rabbit_shape);
-        */
-        //shape.setPosition(x, y);
-        //shape.setFillColor(sf::Color(255, 255, 0));
-        //s1.setPosition(x, y - 10);
-        //s2.setPosition(x + 26, y - 10);
-
-        //window.draw(shape);
-        //window.draw(s1);
-        //window.draw(s2);
-        //sf::RectangleShape rab[13][14];
-
-    //}
-    void draw()
-    {
-        char rabbit_move[13][14] = {
-            {'0', '0', '0', '1', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0'},
-            {'0', '0', '1', '2', '1', '2', '1', '0', '0', '0', '0', '0', '0', '0'},
-            {'0', '0', '1', '3', '1', '3', '1', '0', '0', '0', '0', '0', '0', '0'},
-            {'0', '0', '1', '3', '1', '3', '1', '0', '0', '0', '0', '0', '0', '0'},
-            {'0', '1', '2', '2', '2', '2', '1', '0', '0', '0', '0', '0', '0', '0'},
-            {'1', '2', '2', '2', '2', '2', '2', '1', '1', '1', '0', '0', '0', '0'},
-            {'1', '2', '2', '1', '2', '2', '2', '2', '2', '2', '1', '0', '0', '0'},
-            {'1', '3', '2', '1', '2', '2', '2', '2', '2', '2', '2', '1', '1', '1'},
-            {'1', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2', '1', '2', '1'},
-            {'0', '1', '1', '2', '2', '2', '2', '2', '2', '2', '2', '2', '1', '1'},
-            {'0', '0', '0', '1', '2', '2', '2', '2', '1', '1', '2', '2', '2', '1'},
-            {'0', '0', '1', '2', '2', '1', '1', '1', '2', '2', '2', '2', '2', '1'},
-            {'0', '0', '1', '1', '1', '0', '0', '0', '1', '1', '1', '1', '1', '1'} };
+// ����
 
 
-        char rabbit_jump[14][16] = {
-            {'0', '0', '0', '1', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'},
-            {'0', '0', '1', '2', '1', '2', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0'},
-            {'0', '0', '1', '3', '1', '3', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0'},
-            {'0', '0', '1', '3', '1', '3', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0'},
-            {'0', '1', '2', '2', '2', '2', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0'},
-            {'1', '2', '2', '2', '2', '2', '2', '1', '1', '1', '0', '0', '0', '0', '0', '0'},
-            {'1', '2', '2', '1', '2', '2', '2', '2', '2', '2', '1', '0', '0', '0', '0', '0'},
-            {'1', '3', '2', '1', '2', '2', '2', '2', '2', '2', '2', '1', '1', '1', '0', '0'},
-            {'1', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2', '1', '2', '1', '0', '0'},
-            {'0', '1', '1', '2', '2', '2', '2', '2', '2', '2', '2', '2', '1', '1', '0', '0'},
-            {'0', '0', '0', '1', '2', '2', '2', '2', '1', '1', '2', '2', '2', '1', '0', '0'},
-            {'0', '0', '0', '1', '2', '2', '1', '1', '0', '0', '1', '2', '2', '2', '1', '0'},
-            {'0', '0', '0', '1', '2', '1', '0', '0', '0', '0', '0', '1', '1', '2', '2', '1'},
-            {'0', '0', '0', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0', '1', '1', '1'} };
-
-
-        char rabbit_back[16][13] = {
-            {'0', '1', '1', '0', '0', '0', '0', '0', '0', '0', '1', '1', '0'},
-            {'0', '1', '2', '1', '0', '0', '0', '0', '0', '1', '2', '1', '0'},
-            {'0', '1', '3', '2', '1', '0', '0', '0', '1', '2', '3', '1', '0'},
-            {'0', '0', '1', '3', '2', '1', '1', '1', '2', '3', '1', '0', '0'},
-            {'0', '0', '0', '1', '2', '2', '2', '2', '2', '1', '0', '0', '0'},
-            {'0', '0', '0', '1', '2', '2', '2', '2', '2', '1', '0', '0', '0'},
-            {'0', '0', '0', '1', '2', '2', '2', '2', '2', '1', '0', '0', '0'},
-            {'0', '0', '1', '2', '1', '2', '2', '2', '1', '2', '1', '0', '0'},
-            {'0', '1', '2', '2', '2', '2', '2', '2', '2', '2', '2', '1', '0'},
-            {'0', '1', '2', '2', '2', '2', '2', '2', '2', '2', '2', '1', '0'},
-            {'0', '1', '2', '2', '2', '2', '2', '2', '2', '2', '2', '1', '0'},
-            {'0', '1', '2', '2', '2', '2', '2', '2', '2', '2', '2', '1', '0'},
-            {'0', '0', '1', '2', '2', '2', '2', '2', '2', '2', '1', '0', '0'},
-            {'0', '1', '2', '2', '1', '2', '2', '2', '1', '2', '2', '1', '0'},
-            {'0', '0', '1', '1', '1', '2', '2', '2', '1', '1', '1', '0', '0'},
-            {'0', '0', '0', '0', '0', '1', '1', '1', '0', '0', '0', '0', '0'} };
-
-
-        char rabbit_back_jump[19][13] = {
-            {'0', '1', '1', '0', '0', '1', '0', '1', '0', '0', '1', '1', '0'},
-            {'0', '1', '2', '1', '1', '2', '1', '2', '1', '1', '2', '1', '0'},
-            {'0', '1', '3', '2', '1', '2', '1', '2', '1', '2', '3', '1', '0'},
-            {'0', '0', '1', '3', '2', '1', '1', '1', '2', '3', '1', '0', '0'},
-            {'0', '0', '0', '1', '2', '2', '2', '2', '2', '1', '0', '0', '0'},
-            {'0', '0', '1', '1', '2', '2', '2', '2', '2', '1', '1', '0', '0'},
-            {'0', '1', '2', '1', '2', '2', '2', '2', '2', '1', '2', '1', '0'},
-            {'0', '1', '1', '2', '1', '2', '2', '2', '1', '2', '1', '1', '0'},
-            {'0', '1', '2', '2', '2', '2', '2', '2', '2', '2', '2', '1', '0'},
-            {'0', '1', '2', '2', '2', '2', '2', '2', '2', '2', '2', '1', '0'},
-            {'0', '1', '2', '2', '2', '2', '2', '2', '2', '2', '2', '1', '0'},
-            {'0', '1', '2', '2', '2', '2', '2', '2', '2', '2', '2', '1', '0'},
-            {'0', '0', '1', '2', '2', '2', '2', '2', '2', '2', '1', '0', '0'},
-            {'0', '0', '1', '2', '2', '2', '2', '2', '2', '2', '1', '0', '0'},
-            {'0', '0', '1', '2', '1', '1', '1', '1', '1', '2', '1', '0', '0'},
-            {'0', '0', '1', '0', '1', '0', '0', '0', '1', '0', '1', '0', '0'},
-            {'0', '1', '0', '0', '1', '0', '0', '0', '1', '0', '0', '1', '0'},
-            {'0', '1', '0', '0', '1', '0', '0', '0', '1', '0', '0', '1', '0'},
-            {'0', '0', '1', '1', '0', '0', '0', '0', '0', '1', '1', '0', '0'} };
-
-
-        char rabbit_front[17][13] = {
-            {'1', '1', '0', '0', '0', '0', '0', '1', '1', '0', '0', '0', '0'},
-            {'1', '2', '1', '0', '0', '0', '1', '2', '1', '0', '0', '0', '0'},
-            {'1', '3', '2', '1', '0', '1', '2', '3', '1', '0', '0', '0', '0'},
-            {'0', '1', '3', '1', '0', '1', '3', '1', '0', '0', '0', '0', '0'},
-            {'0', '1', '2', '2', '1', '2', '2', '1', '0', '0', '0', '0', '0'},
-            {'1', '2', '2', '2', '2', '2', '2', '2', '1', '0', '0', '0', '0'},
-            {'1', '2', '1', '2', '2', '2', '1', '2', '1', '0', '0', '0', '0'},
-            {'1', '2', '1', '2', '2', '2', '1', '2', '1', '0', '0', '0', '0'},
-            {'1', '2', '2', '2', '3', '2', '2', '2', '1', '0', '0', '0', '0'},
-            {'0', '1', '2', '2', '2', '2', '2', '1', '1', '0', '0', '0', '0'},
-            {'0', '0', '1', '1', '1', '1', '1', '1', '0', '0', '1', '1', '0'},
-            {'0', '1', '1', '2', '2', '2', '2', '1', '1', '1', '2', '2', '1'},
-            {'1', '2', '1', '2', '2', '2', '2', '1', '2', '1', '2', '2', '1'},
-            {'1', '2', '1', '2', '2', '2', '2', '1', '2', '2', '1', '1', '0'},
-            {'1', '2', '1', '2', '1', '2', '2', '1', '2', '2', '1', '0', '0'},
-            {'1', '1', '2', '2', '1', '2', '2', '1', '2', '2', '1', '0', '0'},
-            {'0', '1', '1', '1', '1', '1', '1', '1', '1', '1', '0', '0', '0'} };
-
-
-        char rabbit_front_jump[14][13] = {
-            {'0', '0', '0', '1', '1', '0', '0', '0', '1', '1', '0', '0', '0'},
-            {'0', '0', '0', '1', '2', '1', '1', '1', '2', '1', '0', '0', '0'},
-            {'0', '0', '0', '1', '2', '2', '2', '2', '2', '1', '0', '0', '0'},
-            {'0', '0', '1', '2', '1', '2', '2', '2', '1', '2', '1', '0', '0'},
-            {'0', '0', '1', '3', '2', '1', '2', '1', '2', '3', '1', '0', '0'},
-            {'0', '0', '0', '1', '3', '1', '1', '1', '3', '1', '0', '0', '0'},
-            {'0', '0', '1', '2', '2', '2', '2', '2', '2', '2', '1', '0', '0'},
-            {'0', '0', '1', '2', '1', '2', '2', '2', '1', '2', '1', '0', '0'},
-            {'0', '0', '1', '2', '1', '2', '2', '2', '1', '2', '1', '0', '0'},
-            {'0', '0', '1', '2', '2', '2', '3', '2', '2', '2', '1', '0', '0'},
-            {'0', '0', '1', '1', '2', '2', '2', '2', '2', '1', '1', '0', '0'},
-            {'0', '1', '2', '1', '1', '1', '1', '1', '1', '1', '2', '1', '0'},
-            {'0', '1', '2', '2', '1', '0', '0', '0', '1', '2', '2', '1', '0'},
-            {'0', '1', '1', '1', '1', '0', '0', '0', '1', '1', '1', '1', '0'} };
-
-
-        if ((direction < 45) || (direction > 315)) // 오른쪽
-        {
-            if (!jump) // 점프 x
-            {
-                for (int i = 0; i < 13; i++)
-                {
-                    for (int j = 0; j < 14; j++) {
-                        if (rabbit_move[i][j] == '1')
-                        {
-                            sf::RectangleShape shape_r(sf::Vector2f(3, 3));
-                            shape_r.setFillColor(sf::Color(0, 0, 0));
-                            shape_r.setPosition(x + 39 - j * 3, y + i * 3);
-                            window.draw(shape_r);
-                        }
-                        else if (rabbit_move[i][j] == '2')
-                        {
-                            sf::RectangleShape shape_r(sf::Vector2f(3, 3));
-                            shape_r.setFillColor(sf::Color(255, 255, 255));
-                            shape_r.setPosition(x + 39 - j * 3, y + i * 3);
-                            window.draw(shape_r);
-                        }
-                        else if (rabbit_move[i][j] == '3')
-                        {
-                            sf::RectangleShape shape_r(sf::Vector2f(3, 3));
-                            shape_r.setFillColor(sf::Color(255, 130, 255));
-                            shape_r.setPosition(x + 39 - j * 3, y + i * 3);
-                            window.draw(shape_r);
-                        }
-                    }
-                }
-            }
-            else // 점프 0
-            {
-                for (int i = 0; i < 14; i++)
-                {
-                    for (int j = 0; j < 16; j++) {
-                        if (rabbit_jump[i][j] == '1')
-                        {
-                            sf::RectangleShape shape_r(sf::Vector2f(3, 3));
-                            shape_r.setFillColor(sf::Color(0, 0, 0));
-                            shape_r.setPosition(x + 45 - j * 3, y + i * 3);
-                            window.draw(shape_r);
-                        }
-                        else if (rabbit_jump[i][j] == '2')
-                        {
-                            sf::RectangleShape shape_r(sf::Vector2f(3, 3));
-                            shape_r.setFillColor(sf::Color(255, 255, 255));
-                            shape_r.setPosition(x + 45 - j * 3, y + i * 3);
-                            window.draw(shape_r);
-                        }
-                        else if (rabbit_jump[i][j] == '3')
-                        {
-                            sf::RectangleShape shape_r(sf::Vector2f(3, 3));
-                            shape_r.setFillColor(sf::Color(255, 130, 255));
-                            shape_r.setPosition(x + 45 - j * 3, y + i * 3);
-                            window.draw(shape_r);
-                        }
-                    }
-                }
-            }
-        }
-        else if ((direction >= 135) && (direction <= 225)) // 왼쪽
-        {
-            if (!jump) // 점프 x
-            {
-                for (int i = 0; i < 13; i++)
-                {
-                    for (int j = 0; j < 14; j++) {
-                        if (rabbit_move[i][j] == '1')
-                        {
-                            sf::RectangleShape shape_r(sf::Vector2f(3, 3));
-                            shape_r.setFillColor(sf::Color(0, 0, 0));
-                            shape_r.setPosition(x + j * 3, y + i * 3);
-                            window.draw(shape_r);
-                        }
-                        else if (rabbit_move[i][j] == '2')
-                        {
-                            sf::RectangleShape shape_r(sf::Vector2f(3, 3));
-                            shape_r.setFillColor(sf::Color(255, 255, 255));
-                            shape_r.setPosition(x + j * 3, y + i * 3);
-                            window.draw(shape_r);
-                        }
-                        else if (rabbit_move[i][j] == '3')
-                        {
-                            sf::RectangleShape shape_r(sf::Vector2f(3, 3));
-                            shape_r.setFillColor(sf::Color(255, 130, 255));
-                            shape_r.setPosition(x + j * 3, y + i * 3);
-                            window.draw(shape_r);
-                        }
-                    }
-                }
-            }
-            else // 점프 0
-            {
-                for (int i = 0; i < 14; i++)
-                {
-                    for (int j = 0; j < 16; j++) {
-                        if (rabbit_jump[i][j] == '1')
-                        {
-                            sf::RectangleShape shape_r(sf::Vector2f(3, 3));
-                            shape_r.setFillColor(sf::Color(0, 0, 0));
-                            shape_r.setPosition(x + j * 3, y + i * 3);
-                            window.draw(shape_r);
-                        }
-                        else if (rabbit_jump[i][j] == '2')
-                        {
-                            sf::RectangleShape shape_r(sf::Vector2f(3, 3));
-                            shape_r.setFillColor(sf::Color(255, 255, 255));
-                            shape_r.setPosition(x + j * 3, y + i * 3);
-                            window.draw(shape_r);
-                        }
-                        else if (rabbit_jump[i][j] == '3')
-                        {
-                            sf::RectangleShape shape_r(sf::Vector2f(3, 3));
-                            shape_r.setFillColor(sf::Color(255, 130, 255));
-                            shape_r.setPosition(x + j * 3, y + i * 3);
-                            window.draw(shape_r);
-                        }
-                    }
-                }
-            }
-        }
-        else if ((direction >= 225) && (direction <= 315)) // 위쪽
-        {
-            if (!jump) // 점프 x
-            {
-                for (int i = 0; i < 16; i++)
-                {
-                    for (int j = 0; j < 13; j++) {
-                        if (rabbit_back[i][j] == '1')
-                        {
-                            sf::RectangleShape shape_r(sf::Vector2f(3, 3));
-                            shape_r.setFillColor(sf::Color(0, 0, 0));
-                            shape_r.setPosition(x + j * 3, y + i * 3);
-                            window.draw(shape_r);
-                        }
-                        else if (rabbit_back[i][j] == '2')
-                        {
-                            sf::RectangleShape shape_r(sf::Vector2f(3, 3));
-                            shape_r.setFillColor(sf::Color(255, 255, 255));
-                            shape_r.setPosition(x + j * 3, y + i * 3);
-                            window.draw(shape_r);
-                        }
-                        else if (rabbit_back[i][j] == '3')
-                        {
-                            sf::RectangleShape shape_r(sf::Vector2f(3, 3));
-                            shape_r.setFillColor(sf::Color(255, 130, 255));
-                            shape_r.setPosition(x + j * 3, y + i * 3);
-                            window.draw(shape_r);
-                        }
-                    }
-                }
-            }
-            else // 점프 0
-            {
-                for (int i = 0; i < 16; i++)
-                {
-                    for (int j = 0; j < 13; j++) {
-                        if (rabbit_back_jump[i][j] == '1')
-                        {
-                            sf::RectangleShape shape_r(sf::Vector2f(3, 3));
-                            shape_r.setFillColor(sf::Color(0, 0, 0));
-                            shape_r.setPosition(x + j * 3, y + i * 3);
-                            window.draw(shape_r);
-                        }
-                        else if (rabbit_back_jump[i][j] == '2')
-                        {
-                            sf::RectangleShape shape_r(sf::Vector2f(3, 3));
-                            shape_r.setFillColor(sf::Color(255, 255, 255));
-                            shape_r.setPosition(x + j * 3, y + i * 3);
-                            window.draw(shape_r);
-                        }
-                        else if (rabbit_back_jump[i][j] == '3')
-                        {
-                            sf::RectangleShape shape_r(sf::Vector2f(3, 3));
-                            shape_r.setFillColor(sf::Color(255, 130, 255));
-                            shape_r.setPosition(x + j * 3, y + i * 3);
-                            window.draw(shape_r);
-                        }
-                    }
-                }
-            }
-        }
-        else if ((direction >= 45) && (direction <= 135)) // 아래쪽
-        {
-            if (!jump) // 점프 x
-            {
-                for (int i = 0; i < 17; i++)
-                {
-                    for (int j = 0; j < 13; j++) {
-                        if (rabbit_front[i][j] == '1')
-                        {
-                            sf::RectangleShape shape_r(sf::Vector2f(3, 3));
-                            shape_r.setFillColor(sf::Color(0, 0, 0));
-                            shape_r.setPosition(x + j * 3, y + i * 3);
-                            window.draw(shape_r);
-                        }
-                        else if (rabbit_front[i][j] == '2')
-                        {
-                            sf::RectangleShape shape_r(sf::Vector2f(3, 3));
-                            shape_r.setFillColor(sf::Color(255, 255, 255));
-                            shape_r.setPosition(x + j * 3, y + i * 3);
-                            window.draw(shape_r);
-                        }
-                        else if (rabbit_front[i][j] == '3')
-                        {
-                            sf::RectangleShape shape_r(sf::Vector2f(3, 3));
-                            shape_r.setFillColor(sf::Color(255, 130, 255));
-                            shape_r.setPosition(x + j * 3, y + i * 3);
-                            window.draw(shape_r);
-                        }
-                    }
-                }
-            }
-            else // 점프 0
-            {
-                for (int i = 0; i < 14; i++)
-                {
-                    for (int j = 0; j < 13; j++) {
-                        if (rabbit_front_jump[i][j] == '1')
-                        {
-                            sf::RectangleShape shape_r(sf::Vector2f(3, 3));
-                            shape_r.setFillColor(sf::Color(0, 0, 0));
-                            shape_r.setPosition(x + j * 3, y + i * 3);
-                            window.draw(shape_r);
-                        }
-                        else if (rabbit_front_jump[i][j] == '2')
-                        {
-                            sf::RectangleShape shape_r(sf::Vector2f(3, 3));
-                            shape_r.setFillColor(sf::Color(255, 255, 255));
-                            shape_r.setPosition(x + j * 3, y + i * 3);
-                            window.draw(shape_r);
-                        }
-                        else if (rabbit_front_jump[i][j] == '3')
-                        {
-                            sf::RectangleShape shape_r(sf::Vector2f(3, 3));
-                            shape_r.setFillColor(sf::Color(255, 130, 255));
-                            shape_r.setPosition(x + j * 3, y + i * 3);
-                            window.draw(shape_r);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    void print_status() {
-        printf("vel_x : %f\n", vel_x);
-        printf("vel_y : %f\n", vel_y);
-    }
-
-};
-
-// 초식동물
+// �ʽĵ���
 class Herbivore : public Animal {
 private:
 
@@ -554,12 +38,12 @@ public:
     Herbivore(float x, float y) :Animal(x, y) {};
 };
 
-// 육식동물
+// ���ĵ���
 class Carnivore : public Animal {
 
 };
 
-// 잡식동물
+// ��ĵ���
 class Omnivore : public Animal {
 
 };
@@ -570,68 +54,6 @@ private:
 public:
     Rabbit(float x, float y) :Herbivore(x, y) {};
 
-};
-//자연 환경
-class environment {
-private:
-protected:
-    float x;
-    float y;
-public:
-    environment(float x, float y) :x(x), y(y) {};
-
-    virtual void draw() {
-        sf::RectangleShape grass;
-        grass.setSize(sf::Vector2f(10, 10));
-
-        grass.setPosition(x, y);
-
-        window.draw(grass);
-    }
-
-};
-
-// 풀
-class grass : public environment {
-private:
-    bool hasEaten = false;
-
-public:
-    grass(float x, float y) : environment(x, y), hasEaten(false) {};
-
-    void setHasEaten() {
-        hasEaten = true;
-    }
-    void draw() override {
-        sf::RectangleShape shape_g(sf::Vector2f(2, 2));
-        shape_g.setFillColor(sf::Color(0, 144, 0));
-        if (!hasEaten) {
-            char grass_left[13][14] = {
-    {'0', '0', '1', '0', '0', '0', '0', '1', '0', '0', '1', '0', '0', '0'},
-    {'0', '0', '1', '0', '0', '0', '1', '0', '0', '0', '1', '0', '0', '0'},
-    {'0', '1', '1', '0', '0', '0', '1', '0', '0', '0', '1', '0', '0', '0'},
-    {'0', '1', '1', '0', '0', '1', '1', '0', '0', '1', '1', '0', '0', '0'},
-    {'0', '1', '1', '0', '0', '1', '1', '0', '0', '1', '1', '1', '0', '0'},
-    {'1', '2', '1', '0', '0', '1', '2', '1', '0', '1', '1', '1', '0', '0'},
-    {'1', '2', '1', '0', '0', '1', '2', '2', '0', '2', '1', '1', '0', '0'},
-    {'1', '3', '1', '0', '0', '1', '2', '2', '0', '2', '2', '1', '1', '0'},
-    {'1', '2', '1', '0', '0', '1', '2', '2', '0', '0', '2', '1', '2', '0'},
-    {'0', '1', '1', '1', '1', '1', '2', '2', '1', '1', '2', '2', '1', '0'},
-    {'0', '1', '1', '1', '1', '1', '2', '2', '1', '1', '2', '2', '2', '0'},
-    {'0', '1', '1', '2', '1', '1', '1', '1', '2', '2', '2', '2', '2', '0'},
-    {'0', '0', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '0', '0'} };
-            sf::RectangleShape grass;
-            for (int i = 0; i < 13; i++) {
-                for (int j = 0; j < 14; j++) {
-                    if (grass_left[i][j] != '0') {
-                        shape_g.setPosition(x + j * 2, y + i * 2);
-                        window.draw(shape_g);
-                    }
-                }
-            }
-
-        }
-    }
 };
 
 int main()
@@ -655,17 +77,14 @@ int main()
     sf::Color color_grass = sf::Color(94, 161, 82);
 
     // INIT
-    World world = World();
+    RenderWindow window(sf::VideoMode(1200, 800), "My window");
+    world.setWindow(&window);
+    Camera camera;
 
     vector<Rabbit> rabbits = {};
     vector<Rabbit>::iterator r_iter;
     for (int i = 0; i < 10; i++) {
         rabbits.push_back(Rabbit(rand() % 1200, rand() % 800));
-    }
-    vector<grass> grasses = {};
-    vector<grass>::iterator g_iter;
-    for (int i = 0; i < 10; i++) {
-        grasses.push_back(grass(rand() % 1200, rand() % 800));
     }
 
     // SELECT
@@ -689,6 +108,7 @@ int main()
         sf::Event event;
         while (window.pollEvent(event))
         {
+            camera.update(event);
             // "close requested" event: we close the window
             if (event.type == sf::Event::Closed)
                 window.close();
@@ -732,13 +152,13 @@ int main()
             update_prev_clock = curr_clock;
 
             // update all
-            world.update();
+            world.update(update_clock_delta);
             for (int i = 0; i < rabbits.size(); i++) {
-                rabbits[i].update();
+                rabbits[i].update(update_clock_delta);
 
                 // change slected
                 if (is_clicked) {
-                    float distance = sqrt(pow(rabbits[i].get_x() - mouse_position.x, 2) + pow(rabbits[i].get_y() - mouse_position.y, 2));
+                    float distance = sqrt(pow(rabbits[i].getPos().x - mouse_position.x, 2) + pow(rabbits[i].getPos().y - mouse_position.y, 2));
                     if (distance <= 50) {
                         selected = (Animal*)&rabbits[i];
                         is_clicked = false;
@@ -748,7 +168,8 @@ int main()
             }
             is_clicked = false;
 
-            select_rect.setPosition(selected->get_x(), selected->get_y());
+            select_rect.setPosition(selected->getPos().x, selected->getPos().y);
+            camera.setCenter(select_rect.getPosition());
         }
 
         draw_clock_delta = curr_clock - draw_prev_clock;
@@ -764,19 +185,14 @@ int main()
                 r_iter->draw();
             }
             window.draw(select_rect);
-            // draw grasses
-            for (g_iter = grasses.begin(); g_iter != grasses.end(); g_iter++) {
-                g_iter->draw();
-            }
-
 
             // debug
             debug_count = 0;
             //debug("day", world.get_day());
             //debug("time", world.get_time());
             //debug("frame", world.get_frame());
-            debug("selected_x", selected->get_x());
-            debug("selected_y", selected->get_y());
+            debug("selected_x", selected->getPos().x);
+            debug("selected_y", selected->getPos().y);
             debug("fps", fps);
             debug("speed", speed);
 
@@ -785,10 +201,12 @@ int main()
             //cout << "time: " << world.get_time() << std::endl;
             //cout << "frame: " << world.get_frame() << std::endl;
             // end the current frame
+
+            camera.setView();
+
             window.display();
         }
 
     }
-
     return 0;
 }
