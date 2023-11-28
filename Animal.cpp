@@ -88,7 +88,6 @@ void Animal::change_dir() {
 }
 
 void Animal::draw() {
-
     {
         char rabbit_move[13][14] = {
             {'0', '0', '0', '1', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0'},

@@ -41,6 +41,10 @@ void World::setWindow(RenderWindow* window) {
     this->window = window;
 }
 
+void World::setCamera(Camera* camera) {
+    this->camera = camera;
+}
+
 int World::add_entity(Entity* e) {
     entityVector.push_back(e);
     return entityVector.size() - 1;
@@ -54,6 +58,10 @@ int World::delete_entity(Entity* e) {
             return i;
         }
     }
+}
+
+Entity* World::get_entity(unsigned int index) {
+    return entityVector[index];
 }
 
 int World::get_frame() {

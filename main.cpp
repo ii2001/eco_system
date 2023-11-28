@@ -3,32 +3,7 @@
 #include "Entity.h"
 #include "Animal.h"
 #include "World.h"
-
-int debug_count = 0;
-
-// DEBUG
-void debug(string name, int value) {
-    sf::Font font;
-    font.loadFromFile("arial.ttf");
-
-    sf::Text text;
-    text.setFont(font);
-    text.setPosition(0, debug_count * 24);
-    text.setCharacterSize(24);
-    text.setFillColor(sf::Color::White);
-    text.setOutlineColor(sf::Color::Black);
-    text.setOutlineThickness(2);
-    text.setStyle(sf::Text::Bold);
-
-    text.setString(name + ":" + to_string(value));
-
-    debug_count++;
-    world.window->draw(text);
-}
-
-
-// ����
-
+#include "Debug.h"
 
 // �ʽĵ���
 class Herbivore : public Animal {
@@ -81,15 +56,16 @@ int main()
     world.setWindow(&window);
     Camera camera;
 
-    vector<Rabbit> rabbits = {};
-    vector<Rabbit>::iterator r_iter;
+    /*vector<Rabbit> rabbits = {};
+    vector<Rabbit>::iterator r_iter;*/
     for (int i = 0; i < 10; i++) {
-        rabbits.push_back(Rabbit(rand() % 1200, rand() % 800));
+        world.add_entity(new Rabbit(rand() % 1200, rand() % 800));
+        //rabbits.push_back(Rabbit(rand() % 1200, rand() % 800));
     }
 
     // SELECT
-    Animal* selected;
-    selected = &rabbits[0];
+    Entity* selected = world.get_entity(0);
+    //selected = &rabbits[0];
 
     sf::RectangleShape select_rect(sf::Vector2f(0.0, 0.0));
     select_rect.setSize(sf::Vector2f(40.0, 40.0));
@@ -153,20 +129,20 @@ int main()
 
             // update all
             world.update(update_clock_delta);
-            for (int i = 0; i < rabbits.size(); i++) {
-                rabbits[i].update(update_clock_delta);
+            //for (int i = 0; i < rabbits.size(); i++) {
+            //    rabbits[i].update(update_clock_delta);
 
-                // change slected
-                if (is_clicked) {
-                    float distance = sqrt(pow(rabbits[i].getPos().x - mouse_position.x, 2) + pow(rabbits[i].getPos().y - mouse_position.y, 2));
-                    if (distance <= 50) {
-                        selected = (Animal*)&rabbits[i];
-                        is_clicked = false;
-                    }
-                }
+            //    // change slected
+            //    if (is_clicked) {
+            //        float distance = sqrt(pow(rabbits[i].getPos().x - mouse_position.x, 2) + pow(rabbits[i].getPos().y - mouse_position.y, 2));
+            //        if (distance <= 50) {
+            //            selected = (Animal*)&rabbits[i];
+            //            is_clicked = false;
+            //        }
+            //    }
 
-            }
-            is_clicked = false;
+            //}
+            //is_clicked = false;
 
             select_rect.setPosition(selected->getPos().x, selected->getPos().y);
             camera.setCenter(select_rect.getPosition());
@@ -180,29 +156,36 @@ int main()
             // clear the window with black color
             window.clear(color_grass);
 
+            // draw Game Screen here
+            camera.setView(GAME);
+
             // draw everything here...
-            for (r_iter = rabbits.begin(); r_iter != rabbits.end(); r_iter++) {
+            /*for (r_iter = rabbits.begin(); r_iter != rabbits.end(); r_iter++) {
                 r_iter->draw();
-            }
+            }*/
+            world.draw();
+
             window.draw(select_rect);
 
+
+            // draw Interface here (independent from game view)
+            camera.setView(INTERFACE);
+
             // debug
-            debug_count = 0;
-            //debug("day", world.get_day());
-            //debug("time", world.get_time());
-            //debug("frame", world.get_frame());
-            debug("selected_x", selected->getPos().x);
-            debug("selected_y", selected->getPos().y);
-            debug("fps", fps);
-            debug("speed", speed);
+            debug.print("day", world.get_day());
+            debug.print("time", world.get_time());
+            debug.print("frame", world.get_frame());
+            debug.print("selected_x", selected->getPos().x);
+            debug.print("selected_y", selected->getPos().y);
+            debug.print("fps", fps);
+            debug.print("speed", speed);
+            debug.finish();
 
             //console output
             //cout << "day: " << world.get_day() << std::endl;
             //cout << "time: " << world.get_time() << std::endl;
             //cout << "frame: " << world.get_frame() << std::endl;
             // end the current frame
-
-            camera.setView();
 
             window.display();
         }

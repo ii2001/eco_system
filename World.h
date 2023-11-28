@@ -2,6 +2,7 @@
 
 #include "EcoSystem.h"
 #include "Entity.h"
+#include "Camera.h"
 
 using namespace sf;
 
@@ -18,15 +19,18 @@ public:
     ~World();
 
     RenderWindow* window;
+    Camera* camera;
 
-    // update에서 인자로 delta 받아와서 그거로 해야하지 않을까..?
     void update(int dt);
     void draw();
-
+    
     void setWindow(RenderWindow* window);
+    void setCamera(Camera* camera);
 
     int add_entity(Entity *e);
     int delete_entity(Entity* e);
+
+    Entity* get_entity(unsigned int index);
 
     int get_frame();
     int get_time();
