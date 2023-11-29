@@ -14,11 +14,8 @@
 
 #define PI				3.1415926
 
-<<<<<<< HEAD
 #define MIN_FRAME_TIME	30
 
-=======
->>>>>>> e5fc5190a27c6593d4bc1f228d3bb974446cbb10
 using namespace sf;
 using namespace std;
 
