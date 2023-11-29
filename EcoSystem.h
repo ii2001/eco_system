@@ -20,5 +20,5 @@ using namespace sf;
 using namespace std;
 
 enum AnimalState {
-	IDLE, SLEEP, EATING, MOVING
+	IDLE, SLEEP, EATING, MOVING, HUNGRY, HUNTING
 };

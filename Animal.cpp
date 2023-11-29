@@ -122,16 +122,16 @@ void Animal::eatGrass() {
 		// 여기에 풀을 먹는 동작을 추가
 		
 
-		world.window->display();
+		//world.window->display();
 	}
 }
 // moveTo 함수를 이용하여 동물을 특정 위치로 이동시키는 함수 추가
 void Animal::moveTo(const Vector2f& targetPos) {
-    // 이동 방향 설정
+    /*// 이동 방향 설정
     float angle = std::atan2(targetPos.y - pos.y, targetPos.x - pos.x);
     vel.x = speed * std::cos(angle);
     vel.y = speed * std::sin(angle);
-
+    
     // 동물의 위치 업데이트
     pos.x += vel.x;
     pos.y += vel.y;
@@ -143,6 +143,7 @@ void Animal::moveTo(const Vector2f& targetPos) {
     if (state == MOVING && hunger < 10) {
         eatGrass();
     }
+    */
 }
 void Animal::change_dir() {
 	direction = rand() % 360;
@@ -152,7 +153,6 @@ void Animal::change_dir() {
 	jump = false;
 	jump_frame = 0;
 }
-
 void Animal::draw() {
     {
         char rabbit_move[13][14] = {
@@ -520,4 +520,67 @@ void Animal::print_status() {
 
 int Animal::get_state() {
     return state;
+}
+
+int Animal::get_hunger() {
+    return hunger;
+}
+
+Wolf::Wolf(float x, float y) : Animal(x, y) {
+    this->hunger = max_hunger;
+}
+
+void Wolf::move() {
+    target = Vector2f(0.0, 0.0);
+    float delta_x = target.x - pos.x;
+    float delta_y = target.y - pos.y;
+    float vector_size = sqrt(pow(delta_x, 2) + pow(delta_y, 2));
+
+    pos.x += speed * delta_x / vector_size;
+    pos.y += speed * delta_y / vector_size;
+}
+
+bool Wolf::find_rabbit() {
+    return true;
+}
+
+void Wolf::draw() {
+    sf::RectangleShape shape_r(sf::Vector2f(60, 60));
+    shape_r.setFillColor(sf::Color(0, 0, 0));
+    shape_r.setPosition(pos.x, pos.y);
+    world.window->draw(shape_r);
+}
+
+void  Wolf::update(int dt) {
+    
+    //change state
+    if (hunger < 1000) {
+        state = HUNGRY;
+    }
+    else {
+        hunger -= dt;
+    }
+
+    //do thing
+
+    switch (state) {
+    case IDLE:
+        temp += dt;
+        if (temp >= 4000) {
+            //set random target
+            temp = 0;
+            target = Vector2f(pos.x + rand() % 100, pos.y + rand() % 100);
+            state = MOVING;
+        }
+        break;
+    case HUNGRY:
+        if (find_rabbit()) {
+            state = HUNTING;
+        }
+        break;
+    case MOVING:
+        move();
+        break;
+    
+    }
 }
