@@ -85,7 +85,7 @@ int main()
     }
     // main 바뀐 부분
     vector<grass> grasses = {};
-    vector<grass>::iterator g_iter;
+;   vector<grass>::iterator g_iter;
     int first_grass_count = 20;
     for (int i = 0; i < first_grass_count; i++) {
         createGrass(grasses);
@@ -189,14 +189,18 @@ int main()
             for (r_iter = rabbits.begin(); r_iter != rabbits.end(); r_iter++) {
                 r_iter->draw();
             }
-            // main 바뀐 부분
-            // grass control !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            // main change
+            // grass control
             for (g_iter = grasses.begin(); g_iter != grasses.end()-1;) {
                 g_iter->draw();
                 g_iter->minus_age();
                 g_iter->isDead(grasses, g_iter);
             }
-            // 여기까지
+            int grass_size = grasses.size();
+            if (grass_size < 20) {
+                createGrass(grasses);
+            }
+            // to here
             window.draw(select_rect);
 
             // debug
