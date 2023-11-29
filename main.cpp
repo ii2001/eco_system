@@ -39,7 +39,6 @@ int main()
     // FRAME
     int UPDATE_TIME = 30;
     int DRAW_TIME = 30;
-    int speed = 1;
 
     clock_t update_prev_clock = clock();
     clock_t draw_prev_clock = clock();
@@ -98,27 +97,27 @@ int main()
             //speed
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
                 UPDATE_TIME = 0;
-                speed = 0;
+                world.set_speed(0);
             }
             else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1))
             {
                 UPDATE_TIME = 30;
-                speed = 1;
+                world.set_speed(1);
             }
             else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
             {
                 UPDATE_TIME = 15;
-                speed = 2;
+                world.set_speed(2);
             }
             else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3))
             {
                 UPDATE_TIME = 10;
-                speed = 3;
+                world.set_speed(3);
             }
             else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4))
             {
                 UPDATE_TIME = 7;
-                speed = 4;
+                world.set_speed(4);
             }
         }
 
@@ -178,7 +177,7 @@ int main()
             debug.print("selected_x", selected->getPos().x);
             debug.print("selected_y", selected->getPos().y);
             debug.print("fps", fps);
-            debug.print("speed", speed);
+            debug.print("speed", world.get_speed());
             debug.finish();
 
             //console output
