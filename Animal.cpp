@@ -127,11 +127,11 @@ void Animal::eatGrass() {
 }
 // moveTo 함수를 이용하여 동물을 특정 위치로 이동시키는 함수 추가
 void Animal::moveTo(const Vector2f& targetPos) {
-    // 이동 방향 설정
+    /*// 이동 방향 설정
     float angle = std::atan2(targetPos.y - pos.y, targetPos.x - pos.x);
     vel.x = speed * std::cos(angle);
     vel.y = speed * std::sin(angle);
-
+    
     // 동물의 위치 업데이트
     pos.x += vel.x;
     pos.y += vel.y;
@@ -143,6 +143,7 @@ void Animal::moveTo(const Vector2f& targetPos) {
     if (state == MOVING && hunger < 10) {
         eatGrass();
     }
+    */
 }
 void Animal::change_dir() {
 	direction = rand() % 360;
@@ -152,7 +153,6 @@ void Animal::change_dir() {
 	jump = false;
 	jump_frame = 0;
 }
-
 void Animal::draw() {
     {
         char rabbit_move[13][14] = {
@@ -531,6 +531,7 @@ Wolf::Wolf(float x, float y) : Animal(x, y) {
 }
 
 void Wolf::move() {
+    target = Vector2f(0.0, 0.0);
     float delta_x = target.x - pos.x;
     float delta_y = target.y - pos.y;
     float vector_size = sqrt(pow(delta_x, 2) + pow(delta_y, 2));

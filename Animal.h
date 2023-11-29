@@ -80,7 +80,7 @@ public:
     void print_status();
 
     int get_state();
-};
+
     int get_hunger();
 };
 
