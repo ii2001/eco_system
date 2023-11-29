@@ -18,11 +18,6 @@ class Carnivore : public Animal {
 
 };
 
-// ��ĵ���
-class Omnivore : public Animal {
-
-};
-
 class Rabbit : public Herbivore {
 private:
 
