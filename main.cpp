@@ -175,34 +175,3 @@ int main()
 	}
 	return 0;
 }
-#include "Camera.h"
-#include "Entity.h"
-#include "Animal.h"
-#include "World.h"
-#include "Debug.h"
-
-// �ʽĵ���
-class Herbivore : public Animal {
-private:
-
-public:
-	Herbivore(float x, float y) :Animal(x, y) {};
-};
-
-// ���ĵ���
-class Carnivore : public Animal {
-
-};
-
-// ��ĵ���
-class Omnivore : public Animal {
-
-};
-
-class Rabbit : public Herbivore {
-private:
-
-public:
-	Rabbit(float x, float y) :Herbivore(x, y) {};
-
-};
