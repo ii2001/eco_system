@@ -33,6 +33,7 @@ public:
     void minus_age();
     int getAge();
     void isDead(vector<grass>& grasses, std::vector<grass>::iterator& iter);
+    void update(int dt);
 };
 
 void createGrass(vector<grass>& grasses);

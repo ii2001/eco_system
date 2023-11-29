@@ -4,6 +4,7 @@
 #include "Animal.h"
 #include "World.h"
 #include "Debug.h"
+#include "Environment.h"
 
 // �ʽĵ���
 class Herbivore : public Animal {
@@ -52,13 +53,16 @@ int main()
 
 	/*vector<Rabbit> rabbits = {};
 	vector<Rabbit>::iterator r_iter;*/
+	for (int i = 0; i < 20; i++) {
+		world.add_entity(new grass(rand() % 1200, rand() % 800, 500 + rand() % 1000));
+	}
 	for (int i = 0; i < 10; i++) {
 		world.add_entity(new Rabbit(rand() % 1200, rand() % 800));
 		//rabbits.push_back(Rabbit(rand() % 1200, rand() % 800));
 	}
 
 	// SELECT
-	Entity* selected = world.get_entity(0);
+	Entity* selected = world.get_entity(21);
 	//selected = &rabbits[0];
 
 	sf::RectangleShape select_rect(sf::Vector2f(0.0, 0.0));
