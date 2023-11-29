@@ -19,6 +19,9 @@
 using namespace sf;
 using namespace std;
 
+enum Type {
+	GRASS, RABBIT, WOLF
+};
 enum AnimalState {
 	IDLE, SLEEP, EATING, MOVING, HUNGRY, HUNTING
 };

@@ -112,3 +112,7 @@ void createGrass(vector<grass>& grasses) {
 void grass::update(int dt) {
     minus_age();
 }
+
+int grass::get_type() {
+    return GRASS;
+}
