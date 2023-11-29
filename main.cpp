@@ -39,7 +39,6 @@ int main()
 	// CLOCK
 	clock_t curr_clock;
 	clock_t prev_clock = clock();
-	int update_time = 30;
 	int clock_delta;
 	int fps;
 
