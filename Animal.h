@@ -3,10 +3,14 @@
 #include "EcoSystem.h"
 #include "Entity.h"
 #include "World.h"
+#include <cmath>
+
 
 class Animal : public Entity{
 protected:
     int direction = 0;
+
+    Vector2f target;
 
     int hunger = 10;
     int thirst = 10;
@@ -73,4 +77,19 @@ public:
     void print_status();
 
     int get_state();
+    int get_hunger();
 };
+
+class Wolf : public Animal {
+private:
+    
+public:
+    static const int max_hunger = 5000;
+
+    Wolf(float x, float y);
+    void move();
+    bool find_rabbit();
+    void draw();
+    void update(int dt);
+};
+

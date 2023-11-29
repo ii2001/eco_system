@@ -73,7 +73,7 @@ void Animal::eatGrass() {
 
 		//**** 이 부분 디버그 오류 자꾸남 어려움 추가 수정 필요할듯
 
-		world.window->display();
+		//world.window->display();
 	}
 }
 
@@ -453,4 +453,66 @@ void Animal::print_status() {
 
 int Animal::get_state() {
     return state;
+}
+
+int Animal::get_hunger() {
+    return hunger;
+}
+
+Wolf::Wolf(float x, float y) : Animal(x, y) {
+    this->hunger = max_hunger;
+}
+
+void Wolf::move() {
+    float delta_x = target.x - pos.x;
+    float delta_y = target.y - pos.y;
+    float vector_size = sqrt(pow(delta_x, 2) + pow(delta_y, 2));
+
+    pos.x += speed * delta_x / vector_size;
+    pos.y += speed * delta_y / vector_size;
+}
+
+bool Wolf::find_rabbit() {
+    return true;
+}
+
+void Wolf::draw() {
+    sf::RectangleShape shape_r(sf::Vector2f(60, 60));
+    shape_r.setFillColor(sf::Color(0, 0, 0));
+    shape_r.setPosition(pos.x, pos.y);
+    world.window->draw(shape_r);
+}
+
+void  Wolf::update(int dt) {
+    
+    //change state
+    if (hunger < 1000) {
+        state = HUNGRY;
+    }
+    else {
+        hunger -= dt;
+    }
+
+    //do thing
+
+    switch (state) {
+    case IDLE:
+        temp += dt;
+        if (temp >= 4000) {
+            //set random target
+            temp = 0;
+            target = Vector2f(pos.x + rand() % 100, pos.y + rand() % 100);
+            state = MOVING;
+        }
+        break;
+    case HUNGRY:
+        if (find_rabbit()) {
+            state = HUNTING;
+        }
+        break;
+    case MOVING:
+        move();
+        break;
+    
+    }
 }

@@ -6,28 +6,11 @@
 #include "Debug.h"
 #include "Environment.h"
 
-class Herbivore : public Animal {
+class Rabbit : public Animal {
 private:
 
 public:
-	Herbivore(float x, float y) :Animal(x, y) {};
-};
-
-// ���ĵ���
-class Carnivore : public Animal {
-
-};
-
-// ��ĵ���
-class Omnivore : public Animal {
-
-};
-
-class Rabbit : public Herbivore {
-private:
-
-public:
-	Rabbit(float x, float y) :Herbivore(x, y) {};
+	Rabbit(float x, float y) :Animal(x, y) {};
 
 };
 
@@ -50,8 +33,6 @@ int main()
 	world.setWindow(&window);
 	Camera camera;
 
-	/*vector<Rabbit> rabbits = {};
-	vector<Rabbit>::iterator r_iter;*/
 	for (int i = 0; i < 20; i++) {
 		world.add_entity(new grass(rand() % 1200, rand() % 800, 500 + rand() % 1000));
 	}
@@ -59,10 +40,10 @@ int main()
 		world.add_entity(new Rabbit(rand() % 1200, rand() % 800));
 		//rabbits.push_back(Rabbit(rand() % 1200, rand() % 800));
 	}
+	world.add_entity(new Wolf(0.0, 0.0));
 
 	// SELECT
-	Entity* selected = world.get_entity(21);
-	//selected = &rabbits[0];
+	Entity* selected = world.get_entity(30);
 
 	sf::RectangleShape select_rect(sf::Vector2f(0.0, 0.0));
 	select_rect.setSize(sf::Vector2f(40.0, 40.0));
@@ -155,14 +136,11 @@ int main()
 		camera.setView(INTERFACE);
 
 		// debug
-		debug.print("day", world.get_day());
-		debug.print("time", world.get_time());
-		debug.print("Github test", world.get_frame());
-		debug.print("JSE test", world.get_frame());
 		debug.print("selected_x", selected->getPos().x);
 		debug.print("selected_y", selected->getPos().y);
+		debug.print("selected_state", ((Animal*)selected)->get_state());
+		debug.print("selcted_hunger", ((Animal*)selected)->get_hunger());
 		debug.print("fps", fps);
-		debug.print("speed", world.get_speed());
 		debug.finish();
 
 		//console output
