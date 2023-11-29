@@ -1,4 +1,5 @@
-﻿#include "Animal.h"
+#include "Animal.h"
+#include <cmath>
 
 Animal::Animal(Vector2f pos) {
     this->setPos(pos);
@@ -33,6 +34,9 @@ void Animal::update(int dt) {
 		case MOVING:
 			move();
 			break;
+        case SLEEP:
+            sleep();
+            break;
 		default:
 			break;
 		}
@@ -44,7 +48,11 @@ void Animal::move() {
 		pos.x += vel.x;
 		pos.y += vel.y;
 		hunger -= 1;
-		// cout << hunger;
+        desire_for_sleep += 1;
+        if (desire_for_sleep > 100) {
+            state = SLEEP;
+        }
+
 		if (jump == false && jump_frame > 5)
 		{
 			jump = true;
@@ -58,25 +66,84 @@ void Animal::move() {
 		jump_frame++;
 
 		if (state == MOVING && hunger < 10) {
-			state == EATING;
 			eatGrass();
 		}
 	}
 }
 
+// 잠 자는 함수 정의
+void Animal::sleep() {
+    if (desire_for_sleep < 1) {
+        state = MOVING;
+    }
+    // 잠을 자는 동작 구현
+    // 여기에 잠 자는 모습 넣기
+}
+
 void Animal::eatGrass() {
 	{
+        // 현재 동물의 위치
+        Vector2f animalPos = getPos();
+        //풀들 중에서 가장 가까운거 찾기
+        // 가장 가까운 풀의 위치
+    Vector2f closestGrassPos;
+    float closestDistance = std::numeric_limits<float>::max();  // 최대값으로 초기화
+    // 풀을 찾아서 가장 가까운 풀의 위치를 찾음
+
+
+
+    // 풀 포지션 배열값만 받아내면 오나성
+    /*
+    for (const Vector2f& grassPos : environment.getPositions()) {
+        float distance = std::sqrt(std::pow(animalPos.x - grassPos.x, 2) + std::pow(animalPos.y - grassPos.y, 2));
+
+        if (distance < closestDistance) {
+            closestDistance = distance;
+            closestGrassPos = grassPos;
+        }
+    }
+    */
+
+
+
+    // 찾은 풀로 이동
+        moveTo(closestGrassPos);
+
+    // 풀에 도착하면 EATING 상태로 전환
+    if (closestDistance < 1.0f) {
+        state = EATING;
+    }
+    // 풀까지 이동 중인 경우, 상태를 MOVING으로 유지
+    else {
+        state = MOVING;
+    }
+        // 풀까지 좌표이동하면
+        state == EATING;
 		// 여기에 풀을 먹는 동작을 추가
-		// std::cout << "Eating grass at (" << pos.x << ", " << pos.y << ")" << std::endl;
-
-		// 예시: 토끼가 있던 배경 색을 검정색으로
-
-		//**** 이 부분 디버그 오류 자꾸남 어려움 추가 수정 필요할듯
+		
 
 		//world.window->display();
 	}
 }
+// moveTo 함수를 이용하여 동물을 특정 위치로 이동시키는 함수 추가
+void Animal::moveTo(const Vector2f& targetPos) {
+    // 이동 방향 설정
+    float angle = std::atan2(targetPos.y - pos.y, targetPos.x - pos.x);
+    vel.x = speed * std::cos(angle);
+    vel.y = speed * std::sin(angle);
 
+    // 동물의 위치 업데이트
+    pos.x += vel.x;
+    pos.y += vel.y;
+
+    // 동물의 상태 업데이트
+    hunger -= 1;
+
+    // 이동한 위치가 풀의 위치인 경우, 풀을 먹음
+    if (state == MOVING && hunger < 10) {
+        eatGrass();
+    }
+}
 void Animal::change_dir() {
 	direction = rand() % 360;
 	temp = 0;

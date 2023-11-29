@@ -1,8 +1,9 @@
-﻿#pragma once
+#pragma once
 
 #include "EcoSystem.h"
 #include "Entity.h"
 #include "World.h"
+#include "Environment.h"
 #include <cmath>
 
 
@@ -14,7 +15,7 @@ protected:
 
     int hunger = 10;
     int thirst = 10;
-
+    int desire_for_sleep = 0;
     int state = IDLE;
 
     float speed = 3.0;
@@ -36,9 +37,11 @@ public:
 
     //moving_animal
     void move();
-
+    void sleep();
     // 동물이 풀을 먹는 함수
     void eatGrass();
+
+    void moveTo(const Vector2f& targetPos);
 
     void change_dir();
 
@@ -77,6 +80,7 @@ public:
     void print_status();
 
     int get_state();
+};
     int get_hunger();
 };
 
