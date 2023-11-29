@@ -1,7 +1,7 @@
 #include "World.h"
 
 World::World()
-    :day(0), time(0), frame(0), speed(0) {
+    :day(0), time(0), frame(0), speed(1) {
 
 }
 
@@ -14,9 +14,10 @@ World::~World() {
 }
 
 void World::update(int dt) {
-    frame += speed;
+    if (speed == 0)
+        return;
 
-    dt *= speed;
+    frame += speed;
 
     if (frame >= 25) {
         time += 1;

@@ -44,7 +44,7 @@ void Animal::move() {
 		pos.x += vel.x;
 		pos.y += vel.y;
 		hunger -= 1;
-		cout << hunger;
+		// cout << hunger;
 		if (jump == false && jump_frame > 5)
 		{
 			jump = true;
@@ -68,7 +68,7 @@ void Animal::eatGrass() {
 	{
 		// 여기에 풀을 먹는 동작을 추가
 		// 예시로 배경을 검정색으로 변화시키는 것으로 표현
-		std::cout << "Eating grass at (" << pos.x << ", " << pos.y << ")" << std::endl;
+		// std::cout << "Eating grass at (" << pos.x << ", " << pos.y << ")" << std::endl;
 
 		// 예시: 토끼가 있던 배경 색을 검정색으로
 
