@@ -108,3 +108,7 @@ void createGrass(vector<grass>& grasses) {
     int age = 500 + rand() % 500;
     grasses.push_back(grass(rand() % 1200, rand() % 800, age));
 }
+
+void grass::update(int dt) {
+    minus_age();
+}
