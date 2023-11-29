@@ -6,7 +6,6 @@
 #include "Debug.h"
 #include "Environment.h"
 
-// �ʽĵ���
 class Herbivore : public Animal {
 private:
 
