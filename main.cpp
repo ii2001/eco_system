@@ -154,7 +154,7 @@ int main()
 		// debug
 		debug.print("day", world.get_day());
 		debug.print("time", world.get_time());
-		debug.print("frame", world.get_frame());
+		debug.print("Github test", world.get_frame());
 		debug.print("selected_x", selected->getPos().x);
 		debug.print("selected_y", selected->getPos().y);
 		debug.print("fps", fps);
