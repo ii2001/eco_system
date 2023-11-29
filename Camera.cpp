@@ -1,8 +1,10 @@
 #include "camera.h"
+#include "World.h"
 
 Camera::Camera() //:isFocusing(false), focusAnimal(NULL), viewSize(WINDOW_WIDTH, WINDOW_HEIGHT)
 {
-	view = sf::View(sf::FloatRect(0, 0, 1200, 800));
+	view = View(FloatRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT));
+	interface = View(FloatRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT));
 }
 
 Camera::~Camera() {
@@ -28,9 +30,12 @@ void Camera::setCenter(sf::Vector2f center)
 	view.setCenter(center);
 }
 
-void Camera::setView()
+void Camera::setView(ViewMode mode)
 {
-	world.window->setView(view);
+	if (mode == GAME)
+		world.window->setView(view);
+	else if (mode == INTERFACE)
+		world.window->setView(interface);
 }
 
 //void Camera::setFocus(Animal* a) {

@@ -1,6 +1,7 @@
 #include "World.h"
 
-World::World() {
+World::World()
+    :day(0), time(0), frame(0), speed(1) {
 
 }
 
@@ -13,7 +14,11 @@ World::~World() {
 }
 
 void World::update(int dt) {
-    frame++;
+    if (speed == 0)
+        return;
+
+    frame += speed;
+
     if (frame >= 25) {
         time += 1;
         frame = 0;
@@ -41,6 +46,10 @@ void World::setWindow(RenderWindow* window) {
     this->window = window;
 }
 
+void World::setCamera(Camera* camera) {
+    this->camera = camera;
+}
+
 int World::add_entity(Entity* e) {
     entityVector.push_back(e);
     return entityVector.size() - 1;
@@ -56,6 +65,10 @@ int World::delete_entity(Entity* e) {
     }
 }
 
+Entity* World::get_entity(unsigned int index) {
+    return entityVector[index];
+}
+
 int World::get_frame() {
     return frame;
 }
@@ -66,6 +79,14 @@ int World::get_time() {
 
 int World::get_day() {
     return day;
+}
+
+int World::get_speed() {
+    return speed;
+}
+
+void World::set_speed(int speed) {
+    this->speed = speed;
 }
 
 World world;

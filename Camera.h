@@ -1,16 +1,22 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
-#include "World.h"
+#include "EcoSystem.h"
 
 #define ZOOM_SPEED	0.1
 
+enum ViewMode {
+	GAME, INTERFACE
+};
+
 class Camera {
 private:
-	sf::View view;
+	View view;
+	Vector2f viewSize;
+
+	View interface;
+
 	//Animal* focusAnimal;
 	//bool isFocusing;
-	sf::Vector2f viewSize;
 public:
 	Camera();
 	~Camera();
@@ -18,7 +24,7 @@ public:
 	void update(sf::Event event);			//마우스 휠, 이동(x), 클릭(x) 등 구현 예정
 
 	void setCenter(sf::Vector2f center);	//카메라 가운데 설정
-	void setView();							//이걸 호출해줘야 현재 camera가 화면에 반영 됨, update 마지막에 호출
+	void setView(ViewMode mode);			//이걸 호출해줘야 현재 camera가 화면에 반영 됨, update 마지막에 호출
 
 	//void setFocus(Animal a);
 	//bool isVisible(Entity e);
