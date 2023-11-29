@@ -8,9 +8,11 @@ using namespace sf;
 
 class World {
 private:
-    int day = 0;
-    int time = 0;
-    int frame = 0;
+    int day;
+    int time;
+    int frame;
+
+    int speed;
 
     vector<Entity*> entityVector;
 
@@ -35,6 +37,9 @@ public:
     int get_frame();
     int get_time();
     int get_day();
+    int get_speed();
+
+    void set_speed(int speed);
 };
 
 extern World world;
