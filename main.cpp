@@ -39,6 +39,7 @@ int main()
 	// CLOCK
 	clock_t curr_clock;
 	clock_t prev_clock = clock();
+	int update_time = 30;
 	int clock_delta;
 	int fps;
 
@@ -109,6 +110,9 @@ int main()
 
 		curr_clock = clock();
 		clock_delta = curr_clock - prev_clock;
+
+		if (clock_delta < MIN_FRAME_TIME)
+			continue;
 		prev_clock = curr_clock;
 
 		// update all
