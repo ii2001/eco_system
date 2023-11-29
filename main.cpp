@@ -1,4 +1,3 @@
-﻿#include "EcoSystem.h"
 #include "Camera.h"
 #include "Entity.h"
 #include "Animal.h"
@@ -15,6 +14,11 @@ public:
 
 // ���ĵ���
 class Carnivore : public Animal {
+
+};
+
+// ��ĵ���
+class Omnivore : public Animal {
 
 };
 
@@ -104,6 +108,9 @@ int main()
 
 		curr_clock = clock();
 		clock_delta = curr_clock - prev_clock;
+
+		if (clock_delta < MIN_FRAME_TIME)
+			continue;
 		prev_clock = curr_clock;
 
 		// update all
@@ -149,8 +156,7 @@ int main()
 		// debug
 		debug.print("day", world.get_day());
 		debug.print("time", world.get_time());
-		debug.print("Github test", world.get_frame());
-		debug.print("JSE test", world.get_frame());
+		debug.print("frame", world.get_frame());
 		debug.print("selected_x", selected->getPos().x);
 		debug.print("selected_y", selected->getPos().y);
 		debug.print("fps", fps);
