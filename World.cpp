@@ -69,6 +69,10 @@ Entity* World::get_entity(unsigned int index) {
     return entityVector[index];
 }
 
+int World::get_entity_num() {
+    return entityVector.size();
+}
+
 int World::get_frame() {
     return frame;
 }

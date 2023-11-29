@@ -54,3 +54,7 @@ Vector2f Entity::center() {
 FloatRect Entity::getRect() {
 	return rect;
 }
+
+float Entity::distance(Entity& entity) {
+	return sqrt(pow(pos.x - entity.getPos().x, 2) + pow(pos.y - entity.getPos().y, 2));
+}

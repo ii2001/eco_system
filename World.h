@@ -15,7 +15,6 @@ private:
     int speed;
 
     vector<Entity*> entityVector;
-
 public:
     World();
     ~World();
@@ -33,6 +32,8 @@ public:
     int delete_entity(Entity* e);
 
     Entity* get_entity(unsigned int index);
+
+    int get_entity_num();
 
     int get_frame();
     int get_time();

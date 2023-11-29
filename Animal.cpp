@@ -521,27 +521,60 @@ void Animal::print_status() {
 int Animal::get_state() {
     return state;
 }
-
 int Animal::get_hunger() {
     return hunger;
 }
 
-Wolf::Wolf(float x, float y) : Animal(x, y) {
-    this->hunger = max_hunger;
+Rabbit::Rabbit(float x, float y) :Animal(x, y) {};
+
+int Rabbit::get_type() {
+    return RABBIT;
 }
 
-void Wolf::move() {
-    target = Vector2f(0.0, 0.0);
+Wolf::Wolf(float x, float y) : Animal(x, y) {
+    this->hunger = max_hunger;
+    this->speed = 300.0;
+}
+
+void Wolf::move(int dt) {
     float delta_x = target.x - pos.x;
     float delta_y = target.y - pos.y;
     float vector_size = sqrt(pow(delta_x, 2) + pow(delta_y, 2));
 
-    pos.x += speed * delta_x / vector_size;
-    pos.y += speed * delta_y / vector_size;
+    if (vector_size < 10) {
+        state = IDLE;
+    }
+    else {
+        pos.x += speed * dt * delta_x / vector_size / 1000;
+        pos.y += speed * dt * delta_y / vector_size / 1000;
+    }
 }
 
 bool Wolf::find_rabbit() {
-    return true;
+    Entity* entity;
+    for (int i = 0; i < world.get_entity_num(); i++) {
+        entity = world.get_entity(i);
+        // check rabbit
+        if (entity->get_type() == RABBIT) {
+            if (this->distance(*entity) < 1000) {
+                target_rabbit = (Rabbit*)(entity);
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+void Wolf::hunt(int dt) {
+    if (this->distance(*target_rabbit) > 10) {
+        target = target_rabbit->getPos();
+        move(dt);
+    }
+    else {
+        world.delete_entity(target_rabbit);
+        state = IDLE;
+        hunger += 5000;
+    }
 }
 
 void Wolf::draw() {
@@ -552,35 +585,32 @@ void Wolf::draw() {
 }
 
 void  Wolf::update(int dt) {
-    
-    //change state
-    if (hunger < 1000) {
-        state = HUNGRY;
+    hunger -= 10;
+    if (hunger < 3000) {
+        if (find_rabbit()) {
+            state = HUNTING;
+        }
     }
-    else {
-        hunger -= dt;
-    }
-
-    //do thing
 
     switch (state) {
     case IDLE:
         temp += dt;
-        if (temp >= 4000) {
+        if (temp >= 1000) {
             //set random target
             temp = 0;
-            target = Vector2f(pos.x + rand() % 100, pos.y + rand() % 100);
+            target = Vector2f(pos.x + rand() % 500 - 250, pos.y + rand() % 500 - 250);
             state = MOVING;
         }
         break;
-    case HUNGRY:
-        if (find_rabbit()) {
-            state = HUNTING;
-        }
-        break;
     case MOVING:
-        move();
+        move(dt);
         break;
-    
+    case HUNTING:
+        hunt(dt);
+        break;
     }
+}
+
+int Wolf::get_type() {
+    return WOLF;
 }

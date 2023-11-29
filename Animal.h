@@ -82,18 +82,33 @@ public:
     int get_state();
 
     int get_hunger();
+
+    virtual int get_type() = 0;
+};
+
+class Rabbit : public Animal {
+private:
+
+public:
+    static const int specie = RABBIT;
+    Rabbit(float x, float y);
+
+    int get_type();
 };
 
 class Wolf : public Animal {
 private:
-    
+    Rabbit* target_rabbit;
 public:
-    static const int max_hunger = 5000;
+    static const int specie = WOLF;
+    static const int max_hunger = 10000;
 
     Wolf(float x, float y);
-    void move();
+    void move(int dt);
     bool find_rabbit();
+    void hunt(int dt);
     void draw();
     void update(int dt);
+    int get_type();
 };
 

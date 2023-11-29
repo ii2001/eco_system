@@ -6,14 +6,6 @@
 #include "Debug.h"
 #include "Environment.h"
 
-class Rabbit : public Animal {
-private:
-
-public:
-	Rabbit(float x, float y) :Animal(x, y) {};
-
-};
-
 int main()
 {
 	// RANDOM SEED
@@ -40,7 +32,7 @@ int main()
 		world.add_entity(new Rabbit(rand() % 1200, rand() % 800));
 		//rabbits.push_back(Rabbit(rand() % 1200, rand() % 800));
 	}
-	world.add_entity(new Wolf(0.0, 0.0));
+	world.add_entity(new Wolf(600.0, 800.0));
 
 	// SELECT
 	Entity* selected = world.get_entity(30);

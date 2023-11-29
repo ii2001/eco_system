@@ -1,11 +1,13 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <cmath>
 
 using namespace sf;
 
 class Entity {
 protected:
+	int type;
 	Vector2f pos;
 	Vector2f size;
 	FloatRect rect;
@@ -25,4 +27,7 @@ public:
 	Vector2f getPos();
 	Vector2f center();
 	FloatRect getRect();
+
+	float distance(Entity& entity);
+	virtual int get_type() = 0;
 };
