@@ -67,7 +67,6 @@ void Animal::move() {
 void Animal::eatGrass() {
 	{
 		// 여기에 풀을 먹는 동작을 추가
-		// 예시로 배경을 검정색으로 변화시키는 것으로 표현
 		// std::cout << "Eating grass at (" << pos.x << ", " << pos.y << ")" << std::endl;
 
 		// 예시: 토끼가 있던 배경 색을 검정색으로
@@ -450,4 +449,8 @@ void Animal::draw() {
 void Animal::print_status() {
 	printf("vel_x : %f\n", vel.x);
 	printf("vel_y : %f\n", vel.y);
+}
+
+int Animal::get_state() {
+    return state;
 }

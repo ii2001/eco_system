@@ -72,4 +72,5 @@ public:
 
     void print_status();
 
+    int get_state();
 };
