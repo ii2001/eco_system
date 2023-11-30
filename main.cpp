@@ -2,6 +2,7 @@
 #include "Camera.h"
 #include "Entity.h"
 #include "Animal.h"
+#include "Wolf.h"
 #include "World.h"
 #include "Debug.h"
 #include "Environment.h"
