@@ -34,6 +34,7 @@ public:
     int getAge();
     void isDead(vector<grass>& grasses, std::vector<grass>::iterator& iter);
     void update(int dt);
+    int get_type();
 };
 
 void createGrass(vector<grass>& grasses);

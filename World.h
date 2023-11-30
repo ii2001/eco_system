@@ -34,6 +34,8 @@ public:
 
     Entity* get_entity(unsigned int index);
 
+    int get_entity_num();
+
     int get_frame();
     int get_time();
     int get_day();
