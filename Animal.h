@@ -75,6 +75,7 @@ public:
         //sf::RectangleShape rab[13][14];
 
     //}
+    void draw(const char a[19][16]);
     void draw();
 
     void print_status();
