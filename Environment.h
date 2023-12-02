@@ -2,7 +2,7 @@
 
 #include "EcoSystem.h"
 #include "Entity.h"
-#include "World.h"
+
 #include <chrono>
 #include <thread>
 

@@ -1,4 +1,5 @@
 #include "Wolf.h"
+#include "World.h"
 
 Wolf::Wolf(float x, float y) : Animal(x, y) {
     this->hunger = max_hunger;
@@ -7,9 +8,9 @@ Wolf::Wolf(float x, float y) : Animal(x, y) {
 
 bool Wolf::find_rabbit() {
     Entity* entity;
-    for (int i = 0; i < world.get_entity_num(); i++) {
-        entity = world.get_entity(i);
-        // check rabbit 
+    for (int i = 0; i < world.get_entity_num(RABBIT); i++) {
+        entity = world.get_entity(i, RABBIT);
+        // check rabbit
         if (entity->get_type() == RABBIT) {
             if (this->distance(*entity) < detect_range) {
                 target_rabbit = (Animal*)(entity);
@@ -30,7 +31,7 @@ void Wolf::hunt(int dt) {
         move(dt * run_mult);
     }
     else {
-        world.delete_entity(target_rabbit);
+        world.delete_entity(target_rabbit, RABBIT);
         state = IDLE;
         hunger += 5000;
     }

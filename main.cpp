@@ -1,4 +1,4 @@
-﻿#include "EcoSystem.h"
+#include "EcoSystem.h"
 #include "Camera.h"
 #include "Entity.h"
 #include "Animal.h"
@@ -25,23 +25,18 @@ int main()
 	// INIT
 	RenderWindow window(sf::VideoMode(1200, 800), "My window");
 	world.setWindow(&window);
-	Camera camera;
 
-	for (int i = 0; i < 10; i++) {
-		world.add_entity(new grass(rand() % 1200, rand() % 800, 500 + rand() % 1000));
+	for (int i = 0; i < 20; i++) {
+		world.add_entity(new grass(rand() % 1200, rand() % 800, 500 + rand() % 1000), GRASS);
 	}
 	for (int i = 0; i < 10; i++) {
-		world.add_entity(new Rabbit(rand() % 1200, rand() % 800));
+		world.add_entity(new Rabbit(rand() % 1200, rand() % 800), RABBIT);
 		//rabbits.push_back(Rabbit(rand() % 1200, rand() % 800));
 	}
-
-	for (int i = 0; i < 1; i++) {
-		world.add_entity(new Wolf(600.0, 800.0));
-	}
-	
+	world.add_entity(new Wolf(600.0, 800.0), WOLF);
 
 	// SELECT
-	Entity* selected = world.get_entity(20);
+	Entity* selected = world.get_entity(0, WOLF);
 
 	sf::RectangleShape select_rect(sf::Vector2f(0.0, 0.0));
 	select_rect.setSize(sf::Vector2f(60.0, 60.0));
@@ -49,9 +44,11 @@ int main()
 	select_rect.setOutlineThickness(2.0);
 	select_rect.setFillColor(sf::Color::Transparent);
 
+	camera.setFocus((Animal*)selected);
+
 	// MOUSE
 	sf::Vector2i mouse_position;
-	bool is_clicked = false;
+	//bool is_clicked = false;
 
 	// MAIN LOOP
 	while (window.isOpen())
@@ -60,16 +57,16 @@ int main()
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
-			camera.update(event);
+			camera.handleEvent(event);
 			// "close requested" event: we close the window
 			if (event.type == sf::Event::Closed)
 				window.close();
 
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			/*if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			{
 				mouse_position = sf::Mouse::getPosition(window);
 				is_clicked = true;
-			}
+			}*/
 
 			//speed
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
@@ -91,10 +88,16 @@ int main()
 
 		curr_clock = clock();
 		clock_delta = curr_clock - prev_clock;
+
+		/*if (clock_delta >= MIN_FRAME_TIME)
+			continue;*/
+
 		prev_clock = curr_clock;
 
 		// update all
 		world.update(clock_delta);
+
+		camera.update(clock_delta);
 		//for (int i = 0; i < rabbits.size(); i++) {
 		//    rabbits[i].update(update_clock_delta);
 
@@ -111,7 +114,7 @@ int main()
 		//is_clicked = false;
 
 		select_rect.setPosition(selected->getPos().x, selected->getPos().y);
-		camera.setCenter(select_rect.getPosition());
+		//camera.setCenter(select_rect.getPosition());
 
 		fps = 1000.0 / clock_delta;
 
@@ -136,8 +139,10 @@ int main()
 		// debug
 		debug.print("selected_x", selected->getPos().x);
 		debug.print("selected_y", selected->getPos().y);
-		debug.print("selected_direction", ((Animal*)selected)->get_dir());
-		//debug.print("selcted_hunger", ((Animal*)selected)->get_hunger() / 1000);
+		if (camera.getFocus() != NULL) {
+			debug.print("selected_state", camera.getFocus()->get_state());
+			debug.print("selcted_hunger", camera.getFocus()->get_hunger());
+		}
 		debug.print("fps", fps);
 		debug.finish();
 

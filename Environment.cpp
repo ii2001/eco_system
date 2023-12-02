@@ -1,4 +1,5 @@
 #include "Environment.h"
+#include "World.h"
 
 void grass::setHasEaten() {
     hasEaten = true;
