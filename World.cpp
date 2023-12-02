@@ -1,4 +1,5 @@
 #include "World.h"
+#include "Camera.h"
 
 World::World()
     :day(0), time(0), frame(0), speed(1) {
@@ -63,18 +64,23 @@ void World::update(int dt) {
 void World::draw() {
     int size = rabbitVector.size();
     for (int i = 0; i < size; i++) {
-        rabbitVector[i]->draw();
+        drawEntity(rabbitVector[i]);
     }
 
     size = wolfVector.size();
     for (int i = 0; i < size; i++) {
-        wolfVector[i]->draw();
+        drawEntity(wolfVector[i]);
     }
 
     size = grassVector.size();
     for (int i = 0; i < size; i++) {
-        grassVector[i]->draw();
+        drawEntity(grassVector[i]);
     }
+}
+
+void World::drawEntity(Entity* e) {
+    if (camera.isVisiable(*e))
+        e->draw();
 }
 
 void World::setWindow(RenderWindow* window) {

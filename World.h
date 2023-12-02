@@ -19,6 +19,9 @@ private:
     vector<Animal*> rabbitVector;
     vector<Wolf*> wolfVector;
     vector<grass*> grassVector;
+
+    void drawEntity(Entity* e);
+
 public:
     World();
     ~World();

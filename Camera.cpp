@@ -2,8 +2,7 @@
 #include "World.h"
 
 Camera::Camera()
-	:isFocusing(false), focusAnimal(NULL), viewSize(WINDOW_WIDTH, WINDOW_HEIGHT)
-{
+	:isFocusing(false), focusAnimal(NULL), viewSize(WINDOW_WIDTH, WINDOW_HEIGHT) {
 	view = View(FloatRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT));
 	interface = View(FloatRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT));
 }
@@ -98,10 +97,10 @@ Animal* Camera::getFocus() {
 }
 
 bool Camera::isVisiable(Entity e) {
-	return true;
-	//View center, size랑 Entit center, size 계산해서 안에 있는지 검사
-	//rect 충돌 검사로 하면 쉽다 그져
-  //intersect 있으면 더 쉽다 그져
+	FloatRect rect = FloatRect(view.getCenter().x - viewSize.x / 2, view.getCenter().y - viewSize.y / 2, \
+		viewSize.x, viewSize.y);
+
+	return rect.intersects(e.getRect());
 }
 
 Animal* Camera::getClickedAnimal(Vector2f pos) {
@@ -119,3 +118,5 @@ Animal* Camera::getClickedAnimal(Vector2f pos) {
 
 	return NULL;
 }
+
+Camera camera;
