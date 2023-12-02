@@ -3,21 +3,7 @@
 
 Wolf::Wolf(float x, float y) : Animal(x, y) {
     this->hunger = max_hunger;
-    this->speed = 300.0;
-}
-
-void Wolf::move(int dt) {
-    float delta_x = target.x - pos.x;
-    float delta_y = target.y - pos.y;
-    float vector_size = sqrt(pow(delta_x, 2) + pow(delta_y, 2));
-
-    if (vector_size < 10) {
-        state = IDLE;
-    }
-    else {
-        pos.x += speed * dt * delta_x / vector_size / 1000;
-        pos.y += speed * dt * delta_y / vector_size / 1000;
-    }
+    this->target_rabbit = NULL;
 }
 
 bool Wolf::find_rabbit() {
@@ -26,8 +12,8 @@ bool Wolf::find_rabbit() {
         entity = world.get_entity(i, RABBIT);
         // check rabbit
         if (entity->get_type() == RABBIT) {
-            if (this->distance(*entity) < 1000) {
-                target_rabbit = (Rabbit*)(entity);
+            if (this->distance(*entity) < detect_range) {
+                target_rabbit = (Animal*)(entity);
                 return true;
             }
         }
@@ -36,9 +22,13 @@ bool Wolf::find_rabbit() {
 }
 
 void Wolf::hunt(int dt) {
-    if (this->distance(*target_rabbit) > 10) {
+    float distance = this->distance(*target_rabbit);
+    if (distance > 400) {
         target = target_rabbit->getPos();
-        move(dt);
+        move(dt * walk_mult);
+    } else if (this->distance(*target_rabbit) > 10) {
+        target = target_rabbit->getPos();
+        move(dt * run_mult);
     }
     else {
         world.delete_entity(target_rabbit, RABBIT);
@@ -52,10 +42,26 @@ void Wolf::draw() {
     shape_r.setFillColor(sf::Color(0, 0, 0));
     shape_r.setPosition(pos.x, pos.y);
     world.window->draw(shape_r);
+
+    sf::CircleShape shape_red_c(10);
+    shape_red_c.setRadius(detect_range);
+    shape_red_c.setFillColor(sf::Color(0, 0, 0, 0));
+    shape_red_c.setOutlineColor(sf::Color::Red);
+    shape_red_c.setOutlineThickness(4);
+    shape_red_c.setPosition(pos.x - detect_range, pos.y - detect_range);
+    world.window->draw(shape_red_c);
+
+    sf::CircleShape shape_blue_c(10);
+    shape_blue_c.setRadius(300.0);
+    shape_blue_c.setFillColor(sf::Color(0, 0, 0, 0));
+    shape_blue_c.setOutlineColor(sf::Color::Blue);
+    shape_blue_c.setOutlineThickness(4);
+    shape_blue_c.setPosition(pos.x - 300, pos.y - 300);
+    world.window->draw(shape_blue_c);
 }
 
 void  Wolf::update(int dt) {
-    hunger -= 10;
+    hunger -= dt;
     if (hunger < 3000) {
         if (find_rabbit()) {
             state = HUNTING;
@@ -65,7 +71,7 @@ void  Wolf::update(int dt) {
     switch (state) {
     case IDLE:
         temp += dt;
-        if (temp >= 1000) {
+        if (temp >= 2000) {
             //set random target
             temp = 0;
             target = Vector2f(pos.x + rand() % 500 - 250, pos.y + rand() % 500 - 250);
@@ -83,4 +89,8 @@ void  Wolf::update(int dt) {
 
 int Wolf::get_type() {
     return WOLF;
+}
+
+float Wolf::get_speed() {
+    return speed;
 }

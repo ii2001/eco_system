@@ -1,7 +1,8 @@
-﻿#include "EcoSystem.h"
+#include "EcoSystem.h"
 #include "Camera.h"
 #include "Entity.h"
 #include "Animal.h"
+#include "Rabbit.h"
 #include "Wolf.h"
 #include "World.h"
 #include "Debug.h"
@@ -38,7 +39,7 @@ int main()
 	Entity* selected = world.get_entity(0, WOLF);
 
 	sf::RectangleShape select_rect(sf::Vector2f(0.0, 0.0));
-	select_rect.setSize(sf::Vector2f(40.0, 40.0));
+	select_rect.setSize(sf::Vector2f(60.0, 60.0));
 	select_rect.setOutlineColor(sf::Color::Red);
 	select_rect.setOutlineThickness(2.0);
 	select_rect.setFillColor(sf::Color::Transparent);
