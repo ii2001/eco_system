@@ -38,4 +38,5 @@ public:
 	bool isVisiable(Entity e);				//entity가 카메라 상에 그려져야 하는지 true/false 반환
 };
 
+//카메라 전역변수로 설정
 extern Camera camera;
