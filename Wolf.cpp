@@ -9,13 +9,11 @@ Wolf::Wolf(float x, float y) : Animal(x, y) {
 bool Wolf::find_rabbit() {
     Entity* entity;
     for (int i = 0; i < world.get_entity_num(RABBIT); i++) {
-        entity = world.get_entity(i, RABBIT);
-        // check rabbit
-        if (entity->get_type() == RABBIT) {
-            if (this->distance(*entity) < detect_range) {
-                target_rabbit = (Animal*)(entity);
-                return true;
-            }
+        entity = world.get_entity(i,RABBIT);
+        // check rabbit 
+        if (this->distance(*entity) < detect_range) {
+            target_rabbit = (Animal*)(entity);
+            return true;
         }
     }
     return false;

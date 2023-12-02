@@ -1,4 +1,5 @@
 #include "Rabbit.h"
+#include "World.h"
 
 Rabbit::Rabbit(float x, float y) :Animal(x, y) {};
 
