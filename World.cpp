@@ -6,10 +6,25 @@ World::World()
 }
 
 World::~World() {
-    int size = entityVector.size();
+    int size = rabbitVector.size();
+
     for (int i = size - 1; i >= 0; i--) {
-        delete entityVector[i];
-        entityVector.pop_back();
+        delete rabbitVector[i];
+        rabbitVector.pop_back();
+    }
+
+    size = wolfVector.size();
+
+    for (int i = size - 1; i >= 0; i--) {
+        delete wolfVector[i];
+        wolfVector.pop_back();
+    }
+
+    size = grassVector.size();
+
+    for (int i = size - 1; i >= 0; i--) {
+        delete grassVector[i];
+        grassVector.pop_back();
     }
 }
 
@@ -29,16 +44,36 @@ void World::update(int dt) {
         time = 0;
     }
 
-    int size = entityVector.size();
+    int size = rabbitVector.size();
     for (int i = 0; i < size; i++) {
-        entityVector[i]->update(dt);
+        rabbitVector[i]->update(dt);
+    }
+
+    size = wolfVector.size();
+    for (int i = 0; i < size; i++) {
+        wolfVector[i]->update(dt);
+    }
+
+    size = grassVector.size();
+    for (int i = 0; i < size; i++) {
+        grassVector[i]->update(dt);
     }
 }
 
 void World::draw() {
-    int size = entityVector.size();
+    int size = rabbitVector.size();
     for (int i = 0; i < size; i++) {
-        entityVector[i]->draw();
+        rabbitVector[i]->draw();
+    }
+
+    size = wolfVector.size();
+    for (int i = 0; i < size; i++) {
+        wolfVector[i]->draw();
+    }
+
+    size = grassVector.size();
+    for (int i = 0; i < size; i++) {
+        grassVector[i]->draw();
     }
 }
 
@@ -46,31 +81,75 @@ void World::setWindow(RenderWindow* window) {
     this->window = window;
 }
 
-void World::setCamera(Camera* camera) {
-    this->camera = camera;
-}
-
-int World::add_entity(Entity* e) {
-    entityVector.push_back(e);
-    return entityVector.size() - 1;
-}
-
-int World::delete_entity(Entity* e) {
-    int i = 0;
-    for (auto iter = entityVector.begin(); iter != entityVector.end(); iter++, i++) {
-        if (*iter == e) {
-            entityVector.erase(iter);
-            return i;
-        }
+int World::add_entity(Entity* e, Type t) {
+    switch (t) {
+    case RABBIT: 
+        rabbitVector.push_back((Animal*)e);
+        return rabbitVector.size() - 1;
+    case WOLF:
+        wolfVector.push_back((Wolf*)e);
+        return wolfVector.size() - 1;
+    case GRASS:
+        grassVector.push_back((grass*)e);
+        return grassVector.size() - 1;
     }
+    return -1;
 }
 
-Entity* World::get_entity(unsigned int index) {
-    return entityVector[index];
+int World::delete_entity(Entity* e, Type t) {
+    int i = 0;
+
+    switch (t) {
+    case RABBIT:
+        for (auto iter = rabbitVector.begin(); iter != rabbitVector.end(); iter++, i++) {
+            if (*iter == e) {
+                rabbitVector.erase(iter);
+                return i;
+            }
+        }
+        break;
+    case WOLF:
+        for (auto iter = wolfVector.begin(); iter != wolfVector.end(); iter++, i++) {
+            if (*iter == e) {
+                wolfVector.erase(iter);
+                return i;
+            }
+        }
+        break;
+    case GRASS:
+        for (auto iter = grassVector.begin(); iter != grassVector.end(); iter++, i++) {
+            if (*iter == e) {
+                grassVector.erase(iter);
+                return i;
+            }
+        }
+        break;
+    }
+    return -1;
 }
 
-int World::get_entity_num() {
-    return entityVector.size();
+Entity* World::get_entity(unsigned int index, Type t) {
+    switch (t) {
+    case RABBIT: return rabbitVector[index];
+    case WOLF: return wolfVector[index];
+    case GRASS: return grassVector[index];
+    }
+    return NULL;
+}
+
+int World::get_entity_num(Type t) {
+    switch (t) {
+    case ENTITY:
+        return rabbitVector.size() \
+            + wolfVector.size() + grassVector.size();
+    case RABBIT:
+        return rabbitVector.size();
+    case WOLF:
+        return wolfVector.size();
+    case GRASS:
+        return grassVector.size();
+    }
+    return -1;
 }
 
 int World::get_frame() {

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "EcoSystem.h"
+#include "Animal.h"
 
 #define ZOOM_SPEED	0.1
 
@@ -15,19 +16,24 @@ private:
 
 	View interface;
 
-	//Animal* focusAnimal;
-	//bool isFocusing;
+	Animal* focusAnimal;
+	bool isFocusing;
+
+	Animal* getClickedAnimal(Vector2f pos);
 public:
 	Camera();
 	~Camera();
 
-	void update(sf::Event event);			//마우스 휠, 이동(x), 클릭(x) 등 구현 예정
+	void handleEvent(sf::Event event);		//마우스 휠, 이동(x), 클릭(x) 등 구현 예정
+	void update(int dt);
 
 	void setCenter(sf::Vector2f center);	//카메라 가운데 설정
 	void setView(ViewMode mode);			//이걸 호출해줘야 현재 camera가 화면에 반영 됨, update 마지막에 호출
 
-	//void setFocus(Animal a);
-	//bool isVisible(Entity e);
+	void setFocus(Animal* a);
+	void releaseFocus(Animal* a);
+	Animal* getFocus();
+	bool isVisiable(Entity e);
 
 	// 필요한거
 	// void SetFocus(Animal) -> Focus 잡아주고 만약 focus 있으면 계속 카메라 중심 옮겨가기
