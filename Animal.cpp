@@ -1,5 +1,5 @@
 #include "Animal.h"
-#include <cmath>
+#include "World.h"
 
 Animal::Animal(Vector2f pos) {
     this->setPos(pos);

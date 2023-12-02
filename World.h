@@ -2,7 +2,9 @@
 
 #include "EcoSystem.h"
 #include "Entity.h"
-#include "Camera.h"
+#include "Animal.h"
+#include "Wolf.h"
+#include "Environment.h"
 
 using namespace sf;
 
@@ -14,26 +16,26 @@ private:
 
     int speed;
 
-    vector<Entity*> entityVector;
+    vector<Animal*> rabbitVector;
+    vector<Wolf*> wolfVector;
+    vector<grass*> grassVector;
 public:
     World();
     ~World();
 
     RenderWindow* window;
-    Camera* camera;
 
     void update(int dt);
     void draw();
     
     void setWindow(RenderWindow* window);
-    void setCamera(Camera* camera);
 
-    int add_entity(Entity *e);
-    int delete_entity(Entity* e);
+    int add_entity(Entity *e, Type t);
+    int delete_entity(Entity* e, Type t);
 
-    Entity* get_entity(unsigned int index);
+    Entity* get_entity(unsigned int index, Type t);
 
-    int get_entity_num();
+    int get_entity_num(Type t);
 
     int get_frame();
     int get_time();

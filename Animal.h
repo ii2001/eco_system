@@ -2,9 +2,7 @@
 
 #include "EcoSystem.h"
 #include "Entity.h"
-#include "World.h"
 #include "Environment.h"
-#include <cmath>
 
 
 class Animal : public Entity{

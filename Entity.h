@@ -1,5 +1,7 @@
 #pragma once
 
+#include "EcoSystem.h"
+
 #include <SFML/Graphics.hpp>
 #include <cmath>
 
@@ -29,5 +31,5 @@ public:
 	FloatRect getRect();
 
 	float distance(Entity& entity);
-	virtual int get_type() = 0;
+	virtual int get_type() { return ENTITY; };
 };
