@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <string>
+#include <cmath>
 #include <math.h>
 #include <random>
 #include <SFML/Graphics.hpp>
@@ -19,6 +20,9 @@
 using namespace sf;
 using namespace std;
 
+enum DIRECTION {
+	RIGHT, LEFT, TOP, DOWN
+};
 enum Type {
 	GRASS, RABBIT, WOLF
 };

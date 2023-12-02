@@ -2,6 +2,7 @@
 #include "Camera.h"
 #include "Entity.h"
 #include "Animal.h"
+#include "Rabbit.h"
 #include "Wolf.h"
 #include "World.h"
 #include "Debug.h"
@@ -26,20 +27,24 @@ int main()
 	world.setWindow(&window);
 	Camera camera;
 
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < 10; i++) {
 		world.add_entity(new grass(rand() % 1200, rand() % 800, 500 + rand() % 1000));
 	}
 	for (int i = 0; i < 10; i++) {
 		world.add_entity(new Rabbit(rand() % 1200, rand() % 800));
 		//rabbits.push_back(Rabbit(rand() % 1200, rand() % 800));
 	}
-	world.add_entity(new Wolf(600.0, 800.0));
+
+	for (int i = 0; i < 1; i++) {
+		world.add_entity(new Wolf(600.0, 800.0));
+	}
+	
 
 	// SELECT
-	Entity* selected = world.get_entity(30);
+	Entity* selected = world.get_entity(20);
 
 	sf::RectangleShape select_rect(sf::Vector2f(0.0, 0.0));
-	select_rect.setSize(sf::Vector2f(40.0, 40.0));
+	select_rect.setSize(sf::Vector2f(60.0, 60.0));
 	select_rect.setOutlineColor(sf::Color::Red);
 	select_rect.setOutlineThickness(2.0);
 	select_rect.setFillColor(sf::Color::Transparent);
@@ -131,8 +136,8 @@ int main()
 		// debug
 		debug.print("selected_x", selected->getPos().x);
 		debug.print("selected_y", selected->getPos().y);
-		debug.print("selected_state", ((Animal*)selected)->get_state());
-		debug.print("selcted_hunger", ((Animal*)selected)->get_hunger());
+		debug.print("selected_direction", ((Animal*)selected)->get_dir());
+		//debug.print("selcted_hunger", ((Animal*)selected)->get_hunger() / 1000);
 		debug.print("fps", fps);
 		debug.finish();
 
