@@ -30,12 +30,13 @@ public:
     
     void setWindow(RenderWindow* window);
 
-    int add_entity(Entity *e, Type t);
-    int delete_entity(Entity* e, Type t);
 
-    Entity* get_entity(unsigned int index, Type t);
+    int add_entity(Entity *e, Type t);      //t에 맞는 벡터에 e 추가
+    int delete_entity(Entity* e, Type t);   //t에 맞는 벡터에 e 삭제
+    
+    Entity* get_entity(unsigned int index, Type t); //type에 맞는 vector에 index번째 객체 반환
 
-    int get_entity_num(Type t);
+    int get_entity_num(Type t);             //type에 맞는 vector 크기 반환
 
     int get_frame();
     int get_time();
