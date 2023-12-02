@@ -7,12 +7,19 @@
 
 class Rabbit : public Animal {
 private:
+    static const int max_hunger = 10000;
     static const int speed = 100.0;
 
-    int temp = 0;
+    float detect_range = 300.0;
+    float walk_mult = 0.5;
+    float run_mult = 2.3;
 
     bool jump = false;
     int jump_frame = 0;
+
+    int temp = 0;
+
+    Animal* target_wolf;
 
     static const char rabbit_left[19][16];
     static const char rabbit_left_jump[19][16];
@@ -25,12 +32,14 @@ private:
 public:
     Rabbit(float x, float y);
 
+    bool find_wolf();
     void eatGrass();
 
     void draw();
     void update(int dt);
     
     void check_dir();
+
     int get_type();
     float get_speed();
 };

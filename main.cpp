@@ -89,30 +89,12 @@ int main()
 		curr_clock = clock();
 		clock_delta = curr_clock - prev_clock;
 
-		/*if (clock_delta >= MIN_FRAME_TIME)
-			continue;*/
-
 		prev_clock = curr_clock;
 
 		// update all
 		world.update(clock_delta);
-
 		camera.update(clock_delta);
-		//for (int i = 0; i < rabbits.size(); i++) {
-		//    rabbits[i].update(update_clock_delta);
-
-		//    // change slected
-		//    if (is_clicked) {
-		//        float distance = sqrt(pow(rabbits[i].getPos().x - mouse_position.x, 2) + pow(rabbits[i].getPos().y - mouse_position.y, 2));
-		//        if (distance <= 50) {
-		//            selected = (Animal*)&rabbits[i];
-		//            is_clicked = false;
-		//        }
-		//    }
-
-		//}
-		//is_clicked = false;
-
+		
 		select_rect.setPosition(selected->getPos().x, selected->getPos().y);
 		//camera.setCenter(select_rect.getPosition());
 
