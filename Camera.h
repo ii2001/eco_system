@@ -37,3 +37,5 @@ public:
 	Animal* getFocus();						//현재 focus 대상 return
 	bool isVisiable(Entity e);				//entity가 카메라 상에 그려져야 하는지 true/false 반환
 };
+
+extern Camera camera;

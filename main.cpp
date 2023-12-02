@@ -24,7 +24,6 @@ int main()
 	// INIT
 	RenderWindow window(sf::VideoMode(1200, 800), "My window");
 	world.setWindow(&window);
-	Camera camera;
 
 	for (int i = 0; i < 20; i++) {
 		world.add_entity(new grass(rand() % 1200, rand() % 800, 500 + rand() % 1000), GRASS);
@@ -139,8 +138,10 @@ int main()
 		// debug
 		debug.print("selected_x", selected->getPos().x);
 		debug.print("selected_y", selected->getPos().y);
-		debug.print("selected_state", ((Animal*)selected)->get_state());
-		debug.print("selcted_hunger", ((Animal*)selected)->get_hunger());
+		if (camera.getFocus() != NULL) {
+			debug.print("selected_state", camera.getFocus()->get_state());
+			debug.print("selcted_hunger", camera.getFocus()->get_hunger());
+		}
 		debug.print("fps", fps);
 		debug.finish();
 
