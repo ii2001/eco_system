@@ -19,19 +19,29 @@ bool Wolf::find_rabbit() {
     return false;
 }
 
-void Wolf::hunt(int dt) {
+bool Wolf::follow(int dt) {
     float distance = this->distance(*target_rabbit);
-    if (distance > 400) {
-        target = target_rabbit->getPos();
-        move(dt * walk_mult);
-    } else if (this->distance(*target_rabbit) > 10) {
+    target = target_rabbit->getPos();
+    if (distance > 600) { move(dt); }
+    else { move(dt * walk_mult); }
+    
+    if (target_rabbit->get_state() == RUNNING_AWAY) { return true; }
+    else { return false; }
+}
+
+bool Wolf::hunt(int dt) {
+    float distance = this->distance(*target_rabbit);
+    if (distance > 10) {
         target = target_rabbit->getPos();
         move(dt * run_mult);
+        return false;
     }
     else {
+        //사냥 성공
         world.delete_entity(target_rabbit, RABBIT);
-        state = IDLE;
+        target_rabbit = NULL;
         hunger += 5000;
+        return true;
     }
 }
 
@@ -40,7 +50,7 @@ void Wolf::draw() {
     shape_r.setFillColor(sf::Color(0, 0, 0));
     shape_r.setPosition(pos.x, pos.y);
     world.window->draw(shape_r);
-
+    /*
     sf::CircleShape shape_red_c(10);
     shape_red_c.setRadius(detect_range);
     shape_red_c.setFillColor(sf::Color(0, 0, 0, 0));
@@ -48,21 +58,24 @@ void Wolf::draw() {
     shape_red_c.setOutlineThickness(4);
     shape_red_c.setPosition(pos.x - detect_range, pos.y - detect_range);
     world.window->draw(shape_red_c);
-
-    sf::CircleShape shape_blue_c(10);
-    shape_blue_c.setRadius(300.0);
-    shape_blue_c.setFillColor(sf::Color(0, 0, 0, 0));
-    shape_blue_c.setOutlineColor(sf::Color::Blue);
-    shape_blue_c.setOutlineThickness(4);
-    shape_blue_c.setPosition(pos.x - 300, pos.y - 300);
-    world.window->draw(shape_blue_c);
+    */
+    
+    sf::CircleShape shape_red_c(10);
+    shape_red_c.setRadius(300.0);
+    shape_red_c.setFillColor(sf::Color(0, 0, 0, 0));
+    shape_red_c.setOutlineColor(sf::Color::Red);
+    shape_red_c.setOutlineThickness(4);
+    shape_red_c.setPosition(pos.x - 300.0, pos.y - 300.0);
+    world.window->draw(shape_red_c);
 }
 
 void  Wolf::update(int dt) {
     hunger -= dt;
     if (hunger < 3000) {
-        if (find_rabbit()) {
-            state = HUNTING;
+        if (target_rabbit == NULL) {
+            if (find_rabbit()) {
+                state = FOLLOWING;
+            }
         }
     }
 
@@ -79,8 +92,15 @@ void  Wolf::update(int dt) {
     case MOVING:
         move(dt);
         break;
+    case FOLLOWING:
+        if (follow(dt)) {
+            state = HUNTING;
+        }
+        break;
     case HUNTING:
-        hunt(dt);
+        if (hunt(dt)) {
+            state = IDLE;
+        }
         break;
     }
 }

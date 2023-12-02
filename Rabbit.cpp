@@ -1,7 +1,10 @@
 #include "Rabbit.h"
 #include "World.h"
 
-Rabbit::Rabbit(float x, float y) :Animal(x, y) {};
+Rabbit::Rabbit(float x, float y) :Animal(x, y) {
+    this->hunger = max_hunger;
+    this->target_wolf = NULL;
+};
 
 void Rabbit::draw() {
     char* curr_arr = NULL;
@@ -39,17 +42,26 @@ void Rabbit::draw() {
 }
 
 void Rabbit::update(int dt) {
+    if (find_wolf()) {
+        //set target
+        Vector2f wolf_pos = target_wolf->getPos();
+        Vector2f vector = Vector2f(wolf_pos.x - pos.x, wolf_pos.y - pos.y);
+        target = pos - vector;
+        check_dir();
+        state = RUNNING_AWAY;
+    }
+    
     switch (state) {
     case IDLE:
         temp += dt;
-        if (temp >= 1000) {
+        if (temp >= 2000) {
             //set random target
             temp = 0;
-            target = Vector2f(pos.x + rand() % 500 - 250, pos.y + rand() % 500 - 250);
+            target = Vector2f(pos.x + rand() % 400 - 200, pos.y + rand() % 400 - 200);
             check_dir();
             state = MOVING;
+            break;
         }
-        break;
     case MOVING:
         jump_frame += dt;
         if (jump_frame > 500) {
@@ -58,7 +70,31 @@ void Rabbit::update(int dt) {
         }
         if (move(dt)) { jump = false; }
         break;
+    case RUNNING_AWAY:
+        jump_frame += dt;
+        if (jump_frame > 500) {
+            jump_frame = 0;
+            jump = !jump;
+        }
+        if (move(dt * run_mult)) {
+            state = IDLE;
+            jump = false;
+        }
+        break;
     }
+}
+
+bool Rabbit::find_wolf() {
+    Entity* entity;
+    for (int i = 0; i < world.get_entity_num(WOLF); i++) {
+        entity = world.get_entity(i, WOLF);
+        if (this->distance(*entity) < detect_range) {
+            target_wolf = (Animal*)(entity);
+            return true;
+        }
+    }
+    return false;
+
 }
 
 void Rabbit::eatGrass() {
@@ -86,7 +122,7 @@ void Rabbit::eatGrass() {
         */
 
         // 찾은 풀로 이동
-        moveTo(closestGrassPos);
+        // target을 찾은 풀로 설정
 
         // 풀에 도착하면 EATING 상태로 전환
         if (closestDistance < 1.0f) {
