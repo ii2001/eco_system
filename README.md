@@ -1,7 +1,8 @@
 # eco_system
 
 ## 공통
-- world에 윈도우, 전체 entity vector 배열 있습니다 entity 생성하고 여따 추가하면 update, draw 자동으로 됨
+- world에 윈도우, rabbit, wolf, grass Vector 있습니다 생성하고 여따 추가하면 update, draw 자동으로 됨
+- world에서 가져다 쓸때 함수 인자에 Type 부분에 RABBIT, WOLF, GRASS 넣으면 알아서 그 벡터에서 찾아서 반환해줌
 - 전역 변수로 필요한 것들 world 클래스에 추가하고 필요한 파일에 include 해서 사용하시면 됩니당
 
 - entity 하위 클래스들 모두 get_type으로 어떤 종류인지 확인 가능 ( 근데 성능면에서는 클래스별로 벡터 분리해주는게 좋을수도 )
