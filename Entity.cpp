@@ -3,7 +3,7 @@
 Entity::Entity() {
 	//world vector에 추가해야 함
 	pos = Vector2f(0, 0);
-	size = Vector2f(0, 0);
+	size = Vector2f(40, 40);
 	rect = FloatRect(pos, size);
 }
 
@@ -52,7 +52,11 @@ Vector2f Entity::center() {
 }
 
 FloatRect Entity::getRect() {
-	return rect;
+	FloatRect r(pos.x, pos.y, rect.width, rect.height);
+
+	//cout << "Rect : " << pos.x << " " << pos.y << " " << rect.width << " " << rect.height << endl;
+
+	return r;
 }
 
 float Entity::distance(Entity& entity) {

@@ -1,4 +1,17 @@
 #include "Environment.h"
+#include "World.h"
+
+environment::environment(Vector2f pos) {
+    this->setPos(pos);
+}
+
+environment::environment(float x, float y) {
+    this->setPos(x, y);
+}
+
+environment::~environment() {
+
+}
 
 void grass::setHasEaten() {
     hasEaten = true;
@@ -56,7 +69,7 @@ void grass::draw() {
         for (int i = 0; i < 13; i++) {
             for (int j = 0; j < 14; j++) {
                 if (grass_fresh[i][j] != '0') {
-                    shape_g.setPosition(x + j * 2, y + i * 2);
+                    shape_g.setPosition(pos.x + j * 2, pos.y + i * 2);
                     world.window->draw(shape_g);
                 }
             }
@@ -68,18 +81,18 @@ void grass::draw() {
         for (int i = 0; i < 13; i++) {
             for (int j = 0; j < 14; j++) {
                 if (grass_normal[i][j] != '0') {
-                    shape_g.setPosition(x + j * 2, y + i * 2);
+                    shape_g.setPosition(pos.x + j * 2, pos.y + i * 2);
                     world.window->draw(shape_g);
                 }
             }
         }
     }
-    else{
+    else {
         shape_g.setFillColor(sf::Color(102, 51, 0));
         for (int i = 0; i < 13; i++) {
             for (int j = 0; j < 14; j++) {
                 if (grass_dying[i][j] != '0') {
-                    shape_g.setPosition(x + j * 2, y + i * 2);
+                    shape_g.setPosition(pos.x + j * 2, pos.y + i * 2);
                     world.window->draw(shape_g);
                 }
             }
@@ -96,23 +109,19 @@ int grass::getAge() {
     return age;
 }
 
-void grass::isDead(vector<grass>& grasses, std::vector<grass>::iterator& iter) {
+void grass::isDead() {
     if (hasEaten || age < 0) {
-        iter = grasses.erase(iter);
+        setPos(0, 0);
     }
-    else {
-        ++iter;
-    }
-}
-void createGrass(vector<grass>& grasses) {
-    int age = 500 + rand() % 500;
-    grasses.push_back(grass(rand() % 1200, rand() % 800, age));
 }
 
 void grass::update(int dt) {
+    isDead();
     minus_age();
 }
 
 int grass::get_type() {
     return GRASS;
 }
+
+grass::grass(float x, float y) :environment(x, y) {};
