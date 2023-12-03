@@ -5,7 +5,8 @@
 #include "Environment.h"
 #include "Animal.h"
 
-class Rabbit : public Animal {
+class Rabbit : public Animal
+{
 private:
     static const int max_hunger = 10000;
     static const int speed = 100.0;
@@ -20,6 +21,7 @@ private:
     int temp = 0;
 
     Animal* target_wolf;
+    grass* target_grass;
 
     static const char rabbit_left[19][16];
     static const char rabbit_left_jump[19][16];
@@ -31,10 +33,9 @@ private:
     static const char rabbit_front_jump[19][16];
 public:
     Rabbit(float x, float y);
-
+    bool find_grass();
     bool find_wolf();
-    void eatGrass();
-
+    bool eatting(int dt);
     void draw();
     void update(int dt);
     
