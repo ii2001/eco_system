@@ -4,6 +4,7 @@
 Rabbit::Rabbit(float x, float y) :Animal(x, y) {
     this->hunger = max_hunger;
     this->target_wolf = NULL;
+    this->target_grass = NULL;
 };
 
 void Rabbit::draw() {
@@ -42,6 +43,11 @@ void Rabbit::draw() {
 }
 
 void Rabbit::update(int dt) {
+    hunger -= dt;
+    /*if (hunger < 0) {
+        world.delete_entity(this, RABBIT);
+        cout << "dead";
+    }*/
     if (find_wolf()) {
         //set target
         Vector2f wolf_pos = target_wolf->getPos();
@@ -49,6 +55,14 @@ void Rabbit::update(int dt) {
         target = pos - vector;
         check_dir();
         state = RUNNING_AWAY;
+    }
+
+    else if (hunger < 3000) {
+        if (target_grass == NULL) {
+            if (find_grass()) {
+                state = HUNGRY;
+            }
+        }
     }
     
     switch (state) {
@@ -81,6 +95,36 @@ void Rabbit::update(int dt) {
             jump = false;
         }
         break;
+    case HUNGRY:
+        jump_frame += dt;
+        if (jump_frame > 500) {
+            jump_frame = 0;
+            jump = !jump;
+        }
+        if (eatting(dt*run_mult)) {
+             state = IDLE;
+             jump = false;
+        }
+        break;
+    }
+}
+
+bool Rabbit::eatting(int dt) {
+    float distance = this->distance(*target_grass);
+    target = target_grass->getPos();
+    if (distance > 600) { move(dt); }
+    else { move(dt * walk_mult); }
+
+    if (distance > 10) {
+        target = target_grass->getPos();
+        move(dt * run_mult);
+        return false;
+    }
+    else {
+        world.delete_entity(target_grass, GRASS);
+        target_grass = NULL;
+        hunger += 10000;
+        return true;
     }
 }
 
@@ -94,51 +138,18 @@ bool Rabbit::find_wolf() {
         }
     }
     return false;
-
 }
 
-void Rabbit::eatGrass() {
-    {
-        // ���� ������ ��ġ
-        Vector2f animalPos = getPos();
-        //Ǯ�� �߿��� ���� ������ ã��
-        // ���� ����� Ǯ�� ��ġ
-        Vector2f closestGrassPos;
-        float closestDistance = std::numeric_limits<float>::max();  // �ִ밪���� �ʱ�ȭ
-        // Ǯ�� ã�Ƽ� ���� ����� Ǯ�� ��ġ�� ã��
-
-
-
-        // Ǯ ������ �迭���� �޾Ƴ��� ������
-        /*
-        for (const Vector2f& grassPos : environment.getPositions()) {
-            float distance = std::sqrt(std::pow(animalPos.x - grassPos.x, 2) + std::pow(animalPos.y - grassPos.y, 2));
-
-            if (distance < closestDistance) {
-                closestDistance = distance;
-                closestGrassPos = grassPos;
-            }
+bool Rabbit::find_grass() {
+    Entity* entity;
+    for (int i = 0; i < world.get_entity_num(GRASS); i++) {
+        entity = world.get_entity(i, GRASS);
+        if (this->distance(*entity) < detect_range) {
+            target_grass = (grass*)(entity);
+            return true;
         }
-        */
-
-        // ã�� Ǯ�� �̵�
-        // target�� ã�� Ǯ�� ����
-
-        // Ǯ�� �����ϸ� EATING ���·� ��ȯ
-        if (closestDistance < 1.0f) {
-            state = EATING;
-        }
-        // Ǯ���� �̵� ���� ���, ���¸� MOVING���� ����
-        else {
-            state = MOVING;
-        }
-        // Ǯ���� ��ǥ�̵��ϸ�
-        state == EATING;
-        // ���⿡ Ǯ�� �Դ� ������ �߰�
-
-
-        //world.window->display();
     }
+    return false;
 }
 
 void Rabbit::check_dir() {
