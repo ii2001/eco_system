@@ -34,7 +34,7 @@ void Camera::handleEvent(sf::Event event) {
 	}
 
 	if (Keyboard::isKeyPressed(Keyboard::F)) {
-		releaseFocus(focusAnimal);
+		releaseFocus();
 	}
 }
 
@@ -83,11 +83,9 @@ void Camera::setFocus(Animal* a) {
 	this->isFocusing = true;
 }
 
-void Camera::releaseFocus(Animal* a) {
-	if (focusAnimal == a) {
-		this->focusAnimal = NULL;
-		this->isFocusing = false;
-	}
+void Camera::releaseFocus() {
+	this->focusAnimal = NULL;
+	this->isFocusing = false;
 }
 
 Animal* Camera::getFocus() {

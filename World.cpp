@@ -11,21 +11,18 @@ World::~World() {
 
     for (int i = size - 1; i >= 0; i--) {
         delete rabbitVector[i];
-        rabbitVector.pop_back();
     }
 
     size = wolfVector.size();
 
     for (int i = size - 1; i >= 0; i--) {
         delete wolfVector[i];
-        wolfVector.pop_back();
     }
 
     size = grassVector.size();
 
     for (int i = size - 1; i >= 0; i--) {
         delete grassVector[i];
-        grassVector.pop_back();
     }
 }
 

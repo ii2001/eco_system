@@ -89,6 +89,9 @@ int main()
 		curr_clock = clock();
 		clock_delta = curr_clock - prev_clock;
 
+		if (clock_delta < MIN_FRAME_TIME)
+			continue;
+
 		prev_clock = curr_clock;
 
 		// update all

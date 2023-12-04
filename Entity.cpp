@@ -1,26 +1,34 @@
 #include "Entity.h"
+#include "Camera.h"
+#include "World.h"
 
 Entity::Entity() {
 	//world vector에 추가해야 함
 	pos = Vector2f(0, 0);
 	size = Vector2f(40, 40);
 	rect = FloatRect(pos, size);
+	type = ENTITY;
 }
 
 Entity::Entity(Vector2f pos) {
 	pos = pos;
 	size = Vector2f(0, 0);
 	rect = FloatRect(pos, size);
+	type = ENTITY;
 }
 
 Entity::Entity(float x, float y) {
 	pos = Vector2f(x, y);
 	size = Vector2f(0, 0);
 	rect = FloatRect(pos, size);
+	type = ENTITY;
 }
 
 Entity::~Entity() {
 	//world vector에서 삭제 필요
+	if (camera.getFocus() == this)
+		camera.releaseFocus();
+	world.delete_entity(this, (Type)type);
 }
 
 void Entity::update(int dt) {
