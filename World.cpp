@@ -2,8 +2,11 @@
 #include "Camera.h"
 
 World::World()
-    :day(0), time(0), frame(0), speed(1) {
-
+    :day(0), time(0), frame(0), speed(1), isNight(0)
+{
+    filter = RectangleShape(sf::Vector2f(0.0, 0.0));
+    filter.setSize(sf::Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT));
+    filter.setFillColor(Color(0, 0, 0, 125));
 }
 
 World::~World() {
@@ -34,6 +37,8 @@ void World::update(int dt) {
 
     if (frame >= 25) {
         time += 1;
+        if (time % 12 == 0)
+            isNight = !isNight;
         frame = 0;
     }
 
@@ -59,6 +64,9 @@ void World::update(int dt) {
 }
 
 void World::draw() {
+    // draw Game Screen here
+    camera.setView(GAME);
+
     int size = grassVector.size();
     for (int i = 0; i < size; i++) {
         drawEntity(grassVector[i]);
@@ -73,6 +81,12 @@ void World::draw() {
     for (int i = 0; i < size; i++) {
         drawEntity(wolfVector[i]);
     }
+
+    // draw Interface here (independent from game view)
+    camera.setView(INTERFACE);
+
+    if (isNight)
+        window->draw(filter);
 }
 
 void World::drawEntity(Entity* e) {
