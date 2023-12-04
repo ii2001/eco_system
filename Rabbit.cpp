@@ -43,6 +43,21 @@ void Rabbit::draw() {
     if (curr_arr != NULL) {
         draw_arr(curr_arr, 16, 19);
     }
+    if (find_predator == true)
+    {
+        for (int i = 0; i < 9; i++)
+        {
+            for (int j = 0; j < 4; j++) {
+                if ((char)rabbit_exclam[i][j] == '4')
+                {
+                    sf::RectangleShape shape_r(sf::Vector2f(3, 3));
+                    shape_r.setFillColor(sf::Color(255, 0, 0));
+                    shape_r.setPosition(pos.x + j * 3 - 6, pos.y + i * 3 - 40);
+                    world.window->draw(shape_r);
+                }
+            }
+        }
+    }
 }
 
 void Rabbit::update(int dt) {
@@ -52,8 +67,10 @@ void Rabbit::update(int dt) {
         world.delete_entity(this, RABBIT);
         cout << "dead";
     }*/
+    find_predator = false;
     if (find_wolf()) {
         //set target
+        find_predator = true;
         Vector2f wolf_pos = target_wolf->getPos();
         Vector2f vector = Vector2f(wolf_pos.x - pos.x, wolf_pos.y - pos.y);
         target = pos - vector;
@@ -348,7 +365,7 @@ const char Rabbit::rabbit_front_jump[19][16] = { {'0', '0', '0', '0', '0', '0', 
 {'0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'} };
 
 
-const static char rabbit_die[19][16] = { {'0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'},
+const char Rabbit::rabbit_die[19][16] = { {'0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'},
 {'0', '0', '1', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'},
 {'0', '0', '1', '2', '1', '0', '0', '0', '0', '0', '0', '0', '1', '1', '1', '0'},
 {'0', '0', '1', '3', '2', '1', '0', '0', '0', '0', '1', '1', '3', '2', '1', '0'},
@@ -367,3 +384,14 @@ const static char rabbit_die[19][16] = { {'0', '0', '0', '0', '0', '0', '0', '0'
 {'0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '4', '0', '0', '0', '0'},
 {'0', '0', '4', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'},
 {'0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'} };
+
+
+const char Rabbit::rabbit_exclam[9][4] = { {'0', '4', '4', '0'},
+{'0', '4', '4', '0'},
+{'0', '4', '4', '0'},
+{'0', '4', '4', '0'},
+{'0', '4', '4', '0'},
+{'0', '4', '4', '0'},
+{'0', '0', '0', '0'},
+{'0', '4', '4', '0'},
+{'0', '4', '4', '0'} };

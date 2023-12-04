@@ -20,6 +20,7 @@ private:
     int jump_frame = 0;
 
     int temp = 0;
+    bool find_predator = false;
 
     Animal* target_wolf;
     grass* target_grass;
@@ -32,6 +33,8 @@ private:
     static const char rabbit_back_jump[19][16];
     static const char rabbit_front[19][16];
     static const char rabbit_front_jump[19][16];
+    static const char rabbit_die[19][16];
+    static const char rabbit_exclam[9][4];
 public:
     Rabbit(float x, float y);
 
