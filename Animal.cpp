@@ -3,14 +3,16 @@
 
 Animal::Animal(Vector2f pos) {
     this->setPos(pos);
+    this->type = RABBIT;
 }
 
 Animal::Animal(float x, float y) {
 	this->setPos(x, y);
+    this->type = RABBIT;
 }
 
 Animal::~Animal() {
-
+    this->type = RABBIT;
 }
 
 void Animal::update(int dt) {

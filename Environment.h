@@ -26,7 +26,7 @@ private:
     bool hasEaten = false;
 
 public:
-    grass(float x, float y, int age) : environment(x, y, age), hasEaten(false) {};
+    grass(float x, float y, int age) : environment(x, y, age), hasEaten(false) { type = GRASS; };
 
     void setHasEaten();
     void draw() override;

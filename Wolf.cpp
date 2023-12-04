@@ -4,6 +4,7 @@
 Wolf::Wolf(float x, float y) : Animal(x, y) {
     this->hunger = max_hunger;
     this->speed = 300.0;
+    this->type = WOLF;
 }
 
 void Wolf::move(int dt) {
@@ -41,7 +42,7 @@ void Wolf::hunt(int dt) {
         move(dt);
     }
     else {
-        world.delete_entity(target_rabbit, RABBIT);
+        delete target_rabbit;
         state = IDLE;
         hunger += 5000;
     }
