@@ -31,7 +31,7 @@ public:
 	void setView(ViewMode mode);			//이걸 호출해줘야 현재 camera가 화면에 반영 됨, update 마지막에 호출
 
 	void setFocus(Animal* a);				//a를 focus함
-	void releaseFocus(Animal* a);			//a와 현재 focus 대상이 같으면 focus 해제
+	void releaseFocus();			//a와 현재 focus 대상이 같으면 focus 해제
 											//*** 이거 객체 삭제할때 계속 호출해줘야 함 ***
 
 	Animal* getFocus();						//현재 focus 대상 return
