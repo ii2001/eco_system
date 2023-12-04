@@ -60,7 +60,7 @@ Vector2f Entity::center() {
 }
 
 FloatRect Entity::getRect() {
-	FloatRect r(pos.x, pos.y, rect.width, rect.height);
+	FloatRect r(pos.x - rect.width / 2, pos.y - rect.height / 2, rect.width, rect.height);
 
 	//cout << "Rect : " << pos.x << " " << pos.y << " " << rect.width << " " << rect.height << endl;
 

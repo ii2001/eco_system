@@ -16,9 +16,13 @@ private:
 
     int speed;
 
+    bool isNight;
+
     vector<Animal*> rabbitVector;
     vector<Wolf*> wolfVector;
     vector<grass*> grassVector;
+
+    RectangleShape filter;
 
     void drawEntity(Entity* e);
 

@@ -5,12 +5,13 @@ Wolf::Wolf(float x, float y) : Animal(x, y) {
     this->hunger = max_hunger;
     this->target_rabbit = NULL;
     this->type = WOLF;
+    this->rect = FloatRect(0, 0, 70, 70);
 }
 
 bool Wolf::find_rabbit() {
     Entity* entity;
     for (int i = 0; i < world.get_entity_num(RABBIT); i++) {
-        entity = world.get_entity(i,RABBIT);
+        entity = world.get_entity(i, RABBIT);
         // check rabbit 
         if (this->distance(*entity) < detect_range) {
             target_rabbit = (Animal*)(entity);

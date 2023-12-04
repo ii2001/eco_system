@@ -103,6 +103,7 @@ void Animal::draw_arr(char* arr, int width, int height) {
         }
     }
 }
+
 void Animal::check_dir() {
     float theta = atan2(target.y - pos.y, target.x - pos.x) * 180 / PI;
     if ((theta <= 45) && (theta >= -45)) {
@@ -124,6 +125,10 @@ int Animal::get_state() {
 }
 int Animal::get_hunger() {
     return hunger;
+}
+
+int Animal::get_thirsty() {
+    return thirst;
 }
 
 

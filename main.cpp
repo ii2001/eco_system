@@ -35,19 +35,10 @@ int main()
 	}
 	world.add_entity(new Wolf(600.0, 800.0), WOLF);
 
-	// SELECT
-	Entity* selected = world.get_entity(0, WOLF);
-
-	sf::RectangleShape select_rect(sf::Vector2f(0.0, 0.0));
-	select_rect.setSize(sf::Vector2f(40.0, 40.0));
-	select_rect.setOutlineColor(sf::Color::Red);
-	select_rect.setOutlineThickness(2.0);
-	select_rect.setFillColor(sf::Color::Transparent);
-
-	camera.setFocus((Animal*)selected);
+	camera.setFocus((Animal*)world.get_entity(0, WOLF));
 
 	// MOUSE
-	sf::Vector2i mouse_position;
+	Vector2i mouse_position;
 	//bool is_clicked = false;
 
 	// MAIN LOOP
@@ -56,12 +47,13 @@ int main()
 		camera.setView(GAME);
 
 		// check all the window's events that were triggered since the last iteration of the loop
-		sf::Event event;
+		Event event;
+
 		while (window.pollEvent(event))
 		{
 			camera.handleEvent(event);
 			// "close requested" event: we close the window
-			if (event.type == sf::Event::Closed)
+			if (event.type == Event::Closed)
 				window.close();
 
 			/*if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -111,7 +103,6 @@ int main()
 		world.update(clock_delta);
 		camera.update(clock_delta);
 		
-		select_rect.setPosition(selected->getPos().x, selected->getPos().y);
 		//camera.setCenter(select_rect.getPosition());
 
 		fps = 1000.0 / clock_delta;
@@ -119,27 +110,20 @@ int main()
 		// clear the window with black color
 		window.clear(color_grass);
 
-		// draw Game Screen here
-		camera.setView(GAME);
-
 		// draw everything here...
 		/*for (r_iter = rabbits.begin(); r_iter != rabbits.end(); r_iter++) {
 			r_iter->draw();
 		}*/
 		world.draw();
 
-		window.draw(select_rect);
-
-
-		// draw Interface here (independent from game view)
-		camera.setView(INTERFACE);
-
 		// debug
-		debug.print("selected_x", selected->getPos().x);
-		debug.print("selected_y", selected->getPos().y);
 		if (camera.getFocus() != NULL) {
-			debug.print("selected_state", camera.getFocus()->get_state());
-			debug.print("selcted_hunger", camera.getFocus()->get_hunger());
+			Animal* selected = camera.getFocus();
+
+			debug.print("selected_x", selected->getPos().x);
+			debug.print("selected_y", selected->getPos().y);
+			debug.print("selected_state", selected->get_state());
+			debug.print("selcted_hunger", selected->get_hunger());
 		}
 		debug.print("fps", fps);
 		debug.finish();
