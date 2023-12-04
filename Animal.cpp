@@ -20,7 +20,6 @@ bool Animal::move(int dt) {
     float speed = get_speed();
 
     if (vector_size < 10) {
-        state = IDLE;
         return true;
     }
     else {

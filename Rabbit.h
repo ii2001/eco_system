@@ -12,6 +12,7 @@ private:
     static const int max_thirsty = 10000;
     static const int speed = 100.0;
 
+    float mate_detect_range = 1000.0;
     float detect_range = 300.0;
     float walk_mult = 0.5;
     float run_mult = 2.3;
@@ -20,10 +21,13 @@ private:
     int jump_frame = 0;
 
     int temp = 0;
+    int temp_mate = 0;
+    int mate_progress = 0;
     bool find_predator = false;
 
     Animal* target_wolf;
     grass* target_grass;
+    Rabbit* target_mate;
 
     static const char rabbit_left[19][16];
     static const char rabbit_left_jump[19][16];
@@ -35,14 +39,17 @@ private:
     static const char rabbit_front_jump[19][16];
     static const char rabbit_die[19][16];
     static const char rabbit_exclam[9][4];
+    static const char rabbit_love[6][7];
 public:
     Rabbit(float x, float y);
 
     bool find_grass();
     //bool find_pond();
     bool find_wolf();
+    bool find_mate();
 
     bool eatting(int dt);
+    bool mate(int dt);
     void draw();
     void update(int dt);
 
