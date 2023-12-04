@@ -3,6 +3,7 @@
 
 Rabbit::Rabbit(float x, float y) :Animal(x, y) {
     this->hunger = max_hunger;
+    this->thirst = max_thirsty;
     this->target_wolf = NULL;
     this->target_grass = NULL;
     this->type = RABBIT;
@@ -45,6 +46,7 @@ void Rabbit::draw() {
 
 void Rabbit::update(int dt) {
     hunger -= dt;
+    thirst -= dt;
     /*if (hunger < 0) {
         world.delete_entity(this, RABBIT);
         cout << "dead";
@@ -57,7 +59,13 @@ void Rabbit::update(int dt) {
         check_dir();
         state = RUNNING_AWAY;
     }
-
+    /*else if (thirst < 3000) {
+        if (target_pond == NULL) {
+            if (find_pond()) {
+                state = THIRST;
+            }
+        }
+    }*/
     else if (hunger < 3000) {
         if (target_grass == NULL) {
             if (find_grass()) {
@@ -152,6 +160,18 @@ bool Rabbit::find_grass() {
     }
     return false;
 }
+
+//bool Rabbit::find_pond() {
+//    Entity* entity;
+//    for (int i = 0; i < world.get_entity_num(POND); i++) {
+//        entity = world.get_entity(i, POND);
+//        if (this->distance(*entity) < detect_range) {
+//            target_pond = (Pond*)(entity);
+//            return true;
+//        }
+//    }
+//    return false;
+//}
 
 void Rabbit::check_dir() {
     float theta = atan2(target.y - pos.y, target.x - pos.x) * 180 / PI;

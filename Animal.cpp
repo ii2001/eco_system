@@ -96,5 +96,9 @@ int Animal::get_hunger() {
     return hunger;
 }
 
+int Animal::get_thirsty() {
+    return thirst;
+}
+
 
 int Animal::get_dir() { return direction; }

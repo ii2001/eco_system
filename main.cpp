@@ -47,7 +47,7 @@ int main()
 	camera.setFocus((Animal*)selected);
 
 	// MOUSE
-	sf::Vector2i mouse_position;
+	Vector2i mouse_position;
 	//bool is_clicked = false;
 
 	// MAIN LOOP
@@ -56,12 +56,13 @@ int main()
 		camera.setView(GAME);
 
 		// check all the window's events that were triggered since the last iteration of the loop
-		sf::Event event;
+		Event event;
+
 		while (window.pollEvent(event))
 		{
 			camera.handleEvent(event);
 			// "close requested" event: we close the window
-			if (event.type == sf::Event::Closed)
+			if (event.type == Event::Closed)
 				window.close();
 
 			/*if (sf::Mouse::isButtonPressed(sf::Mouse::Left))

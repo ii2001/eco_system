@@ -59,7 +59,12 @@ void World::update(int dt) {
 }
 
 void World::draw() {
-    int size = rabbitVector.size();
+    int size = grassVector.size();
+    for (int i = 0; i < size; i++) {
+        drawEntity(grassVector[i]);
+    }
+
+    size = rabbitVector.size();
     for (int i = 0; i < size; i++) {
         drawEntity(rabbitVector[i]);
     }
@@ -67,11 +72,6 @@ void World::draw() {
     size = wolfVector.size();
     for (int i = 0; i < size; i++) {
         drawEntity(wolfVector[i]);
-    }
-
-    size = grassVector.size();
-    for (int i = 0; i < size; i++) {
-        drawEntity(grassVector[i]);
     }
 }
 

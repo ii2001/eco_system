@@ -9,6 +9,7 @@ class Rabbit : public Animal
 {
 private:
     static const int max_hunger = 10000;
+    static const int max_thirsty = 10000;
     static const int speed = 100.0;
 
     float detect_range = 300.0;
@@ -33,8 +34,11 @@ private:
     static const char rabbit_front_jump[19][16];
 public:
     Rabbit(float x, float y);
+
     bool find_grass();
+    //bool find_pond();
     bool find_wolf();
+
     bool eatting(int dt);
     void draw();
     void update(int dt);
