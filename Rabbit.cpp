@@ -192,7 +192,10 @@ void Rabbit::update(int dt) {
     }
 }
 
-bool Rabbit::eatting(int dt) {    
+bool Rabbit::eatting(int dt) {
+    if (target_grass == NULL) {
+        return true;
+    }
     if (this->distance(*target_grass) > 10) {
         target = target_grass->getPos();
         move(dt);
