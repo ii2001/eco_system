@@ -10,6 +10,7 @@ Rabbit::Rabbit(float x, float y) :Animal(x, y) {
 
 void Rabbit::draw() {
     char* curr_arr = NULL;
+    check_dir();
     if (direction == RIGHT) // move right
     {
         if (!jump) // jump x
@@ -54,7 +55,6 @@ void Rabbit::update(int dt) {
         Vector2f wolf_pos = target_wolf->getPos();
         Vector2f vector = Vector2f(wolf_pos.x - pos.x, wolf_pos.y - pos.y);
         target = pos - vector;
-        check_dir();
         state = RUNNING_AWAY;
     }
 
@@ -73,7 +73,6 @@ void Rabbit::update(int dt) {
             //set random target
             temp = 0;
             target = Vector2f(pos.x + rand() % 400 - 200, pos.y + rand() % 400 - 200);
-            check_dir();
             state = MOVING;
             break;
         }
@@ -151,19 +150,6 @@ bool Rabbit::find_grass() {
         }
     }
     return false;
-}
-
-void Rabbit::check_dir() {
-    float theta = atan2(target.y - pos.y, target.x - pos.x) * 180 / PI;
-    if ((theta <= 45) && (theta >= -45)) {
-        direction = RIGHT;
-    } else if ((theta >= 45) && (theta <= 135)) {
-        direction = TOP;
-    } else if ((theta >= 135) || (theta <= -135)) {
-        direction = LEFT;
-    } else if ((theta <= -45) && (theta >= -135)) {
-        direction = DOWN;
-    }
 }
 
 int Rabbit::get_type() {

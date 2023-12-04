@@ -38,8 +38,6 @@ public:
     bool eatting(int dt);
     void draw();
     void update(int dt);
-    
-    void check_dir();
 
     int get_type();
     float get_speed();
