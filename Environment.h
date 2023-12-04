@@ -9,12 +9,10 @@
 class environment : public Entity{
 private:
 protected:
-    float x;
-    float y;
     int age; // randome age for different lifecycle
     bool markedForDeletion = false;
 public:
-    environment(float x, float y, int age) :x(x), y(y), age(age) {};
+    environment(float x, float y, int age) :Entity(x, y), age(age) {};
     
     virtual void draw() = 0;
 
@@ -26,7 +24,7 @@ private:
     bool hasEaten = false;
 
 public:
-    grass(float x, float y, int age) : environment(x, y, age), hasEaten(false) { type = GRASS; };
+    grass(float x, float y, int age);
 
     void setHasEaten();
     void draw() override;

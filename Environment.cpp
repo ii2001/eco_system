@@ -1,6 +1,14 @@
 #include "Environment.h"
 #include "World.h"
 
+grass::grass(float x, float y, int age):
+    environment(x, y, age), hasEaten(false) 
+{ 
+    this->size = Vector2f(20, 20);
+    this->rect = FloatRect(pos, size);
+    type = GRASS;
+}
+
 void grass::setHasEaten() {
     hasEaten = true;
 }
@@ -57,7 +65,7 @@ void grass::draw() {
         for (int i = 0; i < 13; i++) {
             for (int j = 0; j < 14; j++) {
                 if (grass_fresh[i][j] != '0') {
-                    shape_g.setPosition(x + j * 2, y + i * 2);
+                    shape_g.setPosition(pos.x + j * 2, pos.y + i * 2);
                     world.window->draw(shape_g);
                 }
             }
@@ -69,7 +77,7 @@ void grass::draw() {
         for (int i = 0; i < 13; i++) {
             for (int j = 0; j < 14; j++) {
                 if (grass_normal[i][j] != '0') {
-                    shape_g.setPosition(x + j * 2, y + i * 2);
+                    shape_g.setPosition(pos.x + j * 2, pos.y + i * 2);
                     world.window->draw(shape_g);
                 }
             }
@@ -80,7 +88,7 @@ void grass::draw() {
         for (int i = 0; i < 13; i++) {
             for (int j = 0; j < 14; j++) {
                 if (grass_dying[i][j] != '0') {
-                    shape_g.setPosition(x + j * 2, y + i * 2);
+                    shape_g.setPosition(pos.x + j * 2, pos.y + i * 2);
                     world.window->draw(shape_g);
                 }
             }

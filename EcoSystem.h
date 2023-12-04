@@ -19,9 +19,12 @@
 using namespace sf;
 using namespace std;
 
+enum Direction {
+	RIGHT, LEFT, TOP, DOWN
+};
 enum Type {
 	ENTITY, GRASS, RABBIT, WOLF
 };
 enum AnimalState {
-	IDLE, SLEEP, EATING, MOVING, HUNGRY, HUNTING
+	IDLE, SLEEP, EATING, MOVING, HUNGRY, FOLLOWING ,HUNTING, RUNNING_AWAY
 };

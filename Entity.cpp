@@ -7,18 +7,21 @@ Entity::Entity() {
 	pos = Vector2f(0, 0);
 	size = Vector2f(40, 40);
 	rect = FloatRect(pos, size);
+	type = ENTITY;
 }
 
 Entity::Entity(Vector2f pos) {
 	pos = pos;
 	size = Vector2f(0, 0);
 	rect = FloatRect(pos, size);
+	type = ENTITY;
 }
 
 Entity::Entity(float x, float y) {
 	pos = Vector2f(x, y);
 	size = Vector2f(0, 0);
 	rect = FloatRect(pos, size);
+	type = ENTITY;
 }
 
 Entity::~Entity() {

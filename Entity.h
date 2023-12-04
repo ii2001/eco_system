@@ -31,5 +31,5 @@ public:
 	FloatRect getRect();
 
 	float distance(Entity& entity);
-	virtual int get_type() { return ENTITY; };
+	virtual int get_type() { return type; };
 };
