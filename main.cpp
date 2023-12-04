@@ -53,6 +53,8 @@ int main()
 	// MAIN LOOP
 	while (window.isOpen())
 	{
+		camera.setView(GAME);
+
 		// check all the window's events that were triggered since the last iteration of the loop
 		sf::Event event;
 		while (window.pollEvent(event))
@@ -83,6 +85,17 @@ int main()
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4)) {
 				world.set_speed(4);
+			}
+
+			Vector2i mousePos = Mouse::getPosition(*world.window);
+			
+			Vector2f worldPos = (*world.window).mapPixelToCoords(mousePos);
+
+			if (Keyboard::isKeyPressed(Keyboard::R)) {
+				world.add_entity(new Rabbit(worldPos.x, worldPos.y), RABBIT);
+			}
+			else if (Keyboard::isKeyPressed(Keyboard::W)) {
+				world.add_entity(new Wolf(worldPos.x, worldPos.y), RABBIT);
 			}
 		}
 
