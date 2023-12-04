@@ -5,6 +5,7 @@ Rabbit::Rabbit(float x, float y) :Animal(x, y) {
     this->hunger = max_hunger;
     this->target_wolf = NULL;
     this->target_grass = NULL;
+    this->type = RABBIT;
 };
 
 void Rabbit::draw() {

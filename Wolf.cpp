@@ -4,6 +4,7 @@
 Wolf::Wolf(float x, float y) : Animal(x, y) {
     this->hunger = max_hunger;
     this->target_rabbit = NULL;
+    this->type = WOLF;
 }
 
 bool Wolf::find_rabbit() {
@@ -37,8 +38,7 @@ bool Wolf::hunt(int dt) {
         return false;
     }
     else {
-        //��� ����
-        world.delete_entity(target_rabbit, RABBIT);
+        delete target_rabbit;
         target_rabbit = NULL;
         hunger += 5000;
         return true;
