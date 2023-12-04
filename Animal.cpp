@@ -1,4 +1,4 @@
-ï»¿#include "Animal.h"
+#include "Animal.h"
 #include "World.h"
 
 Animal::Animal(Vector2f pos) {
@@ -30,16 +30,16 @@ bool Animal::move(int dt) {
     }
 }
 
-// ì  ìëŠ” í•¨ìˆ˜ ì •ì˜
+// Àá ÀÚ´Â ÇÔ¼ö Á¤ÀÇ
 void Animal::sleep() {
     if (desire_for_sleep < 1) {
         state = MOVING;
     }
-    // ì ì„ ìëŠ” ë™ì‘ êµ¬í˜„
-    // ì—¬ê¸°ì— ì  ìëŠ” ëª¨ìŠµ ë„£ê¸°
+    // ÀáÀ» ÀÚ´Â µ¿ÀÛ ±¸Çö
+    // ¿©±â¿¡ Àá ÀÚ´Â ¸ğ½À ³Ö±â
 }
 
-// moveTo í•¨ìˆ˜ë¥¼ ì´ìš©í•˜ì—¬ ë™ë¬¼ì„ íŠ¹ì • ìœ„ì¹˜ë¡œ ì´ë™ì‹œí‚¤ëŠ” í•¨ìˆ˜ ì¶”ê°€
+// moveTo ÇÔ¼ö¸¦ ÀÌ¿ëÇÏ¿© µ¿¹°À» Æ¯Á¤ À§Ä¡·Î ÀÌµ¿½ÃÅ°´Â ÇÔ¼ö Ãß°¡
 bool Animal::moveTo(int dt, const Vector2f& targetPos) {
     float delta_x = targetPos.x - pos.x;
     float delta_y = targetPos.y - pos.y;
@@ -85,7 +85,38 @@ void Animal::draw_arr(char* arr, int width, int height) {
                 shape_r.setPosition(pos.x + j * 3 - width_check, pos.y + i * 3 - height_check);
                 world.window->draw(shape_r);
             }
+            else if (arr[index] == '4')
+            {
+                sf::RectangleShape shape_r(sf::Vector2f(3, 3));
+                shape_r.setFillColor(sf::Color(255, 30, 30));
+                shape_r.setPosition(pos.x + j * 3 - width_check, pos.y + i * 3 - height_check);
+                world.window->draw(shape_r);
+            }
+            else if (arr[index] == '5')
+            {
+                sf::RectangleShape shape_r(sf::Vector2f(3, 3));
+                shape_r.setFillColor(sf::Color(50, 68, 68));
+                shape_r.setPosition(pos.x + j * 3 - width_check, pos.y + i * 3 - height_check);
+                world.window->draw(shape_r);
+                //
+            }
         }
+    }
+}
+
+void Animal::check_dir() {
+    float theta = atan2(target.y - pos.y, target.x - pos.x) * 180 / PI;
+    if ((theta <= 45) && (theta >= -45)) {
+        direction = RIGHT;
+    }
+    else if ((theta >= 45) && (theta <= 135)) {
+        direction = TOP;
+    }
+    else if ((theta >= 135) || (theta <= -135)) {
+        direction = LEFT;
+    }
+    else if ((theta <= -45) && (theta >= -135)) {
+        direction = DOWN;
     }
 }
 

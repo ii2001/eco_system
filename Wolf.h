@@ -14,18 +14,25 @@ private:
     float walk_mult = 0.8;
     float run_mult = 2.0;
 
+    bool is_walk = false;
+    int walk_frame = 0;
+
     int temp = 0;
 
     Animal* target_rabbit;
 
-    static const char wolf_left[19][16];
-    static const char wolf_left_jump[19][16];
-    static const char wolf_right[19][16];
-    static const char wolf_right_jump[19][16];
-    static const char wolf_back[19][16];
-    static const char wolf_back_jump[19][16];
-    static const char wolf_front[19][16];
-    static const char wolf_front_jump[19][16];
+    static const char wolf_left_stand[50][62];
+    static const char wolf_left_move1[50][70];
+    static const char wolf_left_move2[50][70];
+    static const char wolf_right_stand[50][62];
+    static const char wolf_right_move1[50][70];
+    static const char wolf_right_move2[50][70];
+    static const char wolf_left_sleep[50][62];
+    static const char wolf_right_sleep[50][62];
+    static const char wolf_front1[70][30];
+    static const char wolf_front2[70][30];
+    static const char wolf_back1[70][30];
+    static const char wolf_back2[70][30];
 public:
     Wolf(float x, float y);
 
