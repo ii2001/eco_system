@@ -26,8 +26,11 @@ int main()
 	RenderWindow window(sf::VideoMode(1200, 800), "My window");
 	world.setWindow(&window);
 
-	for (int i = 0; i < 20; i++) {
-		world.add_entity(new grass(rand() % 1200, rand() % 800, 500 + rand() % 1000), GRASS);
+	for (int i = 0; i < 3; i++) {
+		world.add_entity(new Pond(rand() % 1200, rand() % 800), POND);
+	}
+	for (int i = 0; i < 30; i++) {
+		world.add_entity(new grass(rand() % 1200, rand() % 800), GRASS);
 	}
 	for (int i = 0; i < 10; i++) {
 		world.add_entity(new Rabbit(rand() % 1200, rand() % 800), RABBIT);
@@ -58,8 +61,8 @@ int main()
 
 			/*if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			{
-				mouse_position = sf::Mouse::getPosition(window);
-				is_clicked = true;
+			mouse_position = sf::Mouse::getPosition(window);
+			is_clicked = true;
 			}*/
 
 			//speed
@@ -80,7 +83,7 @@ int main()
 			}
 
 			Vector2i mousePos = Mouse::getPosition(*world.window);
-			
+
 			Vector2f worldPos = (*world.window).mapPixelToCoords(mousePos);
 
 			if (Keyboard::isKeyPressed(Keyboard::R)) {
@@ -102,7 +105,7 @@ int main()
 		// update all
 		world.update(clock_delta);
 		camera.update(clock_delta);
-		
+
 		//camera.setCenter(select_rect.getPosition());
 
 		fps = 1000.0 / clock_delta;
@@ -112,7 +115,7 @@ int main()
 
 		// draw everything here...
 		/*for (r_iter = rabbits.begin(); r_iter != rabbits.end(); r_iter++) {
-			r_iter->draw();
+		r_iter->draw();
 		}*/
 		world.draw();
 

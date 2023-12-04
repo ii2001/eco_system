@@ -21,6 +21,7 @@ private:
     vector<Animal*> rabbitVector;
     vector<Wolf*> wolfVector;
     vector<grass*> grassVector;
+    vector<Pond*> pondVector;
 
     RectangleShape filter;
 

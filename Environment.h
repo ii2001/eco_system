@@ -3,36 +3,56 @@
 #include "EcoSystem.h"
 #include "Entity.h"
 
-#include <chrono>
-#include <thread>
+// Animal.h가 포함되어서 그런 거 같다. Entity는 되는데 animal이랑 rabbit 이 안된다.
 
-class environment : public Entity{
+#define COOLTIME 150
+
+class environment : public Entity {
 private:
-protected:
-    int age; // randome age for different lifecycle
-    bool markedForDeletion = false;
+
 public:
-    environment(float x, float y, int age) :Entity(x, y), age(age) {};
-    
+    environment(Vector2f pos);
+    environment(float x, float y);
+    ~environment();
+
     virtual void draw() = 0;
 
 };
 
-// 풀
+// age modify
 class grass : public environment {
-private:
+private:    
+    int age = 1000 + rand() % 1000;
     bool hasEaten = false;
 
+
 public:
-    grass(float x, float y, int age);
+    grass(float x, float y);
 
     void setHasEaten();
     void draw() override;
-    void minus_age();
-    int getAge();
-    void isDead(vector<grass>& grasses, std::vector<grass>::iterator& iter);
+    void minusAge();
+    void isDead();
     void update(int dt);
     int get_type();
+    //void respawn();
+    //void findFullRabbit();
 };
 
-void createGrass(vector<grass>& grasses);
+class Pond : public environment {
+private:
+    int pond_quantity = 0;
+    int refillCooltime = COOLTIME;
+public:
+    Pond(float x, float y);
+
+    void draw();
+    void refillPond();
+    void resetCooltime();
+    int get_type();
+    void update(int dt);
+    void set_transparency(sf::RectangleShape& pix);
+};
+
+
+

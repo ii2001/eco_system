@@ -27,6 +27,11 @@ World::~World() {
     for (int i = size - 1; i >= 0; i--) {
         delete grassVector[i];
     }
+    size = pondVector.size();
+
+    for (int i = size - 1; i >= 0; i--) {
+        delete pondVector[i];
+    }
 }
 
 void World::update(int dt) {
@@ -61,6 +66,10 @@ void World::update(int dt) {
     for (int i = 0; i < size; i++) {
         grassVector[i]->update(dt);
     }
+    size = pondVector.size();
+    for (int i = 0; i < size; i++) {
+        pondVector[i]->update(dt);
+    }
 }
 
 void World::draw() {
@@ -80,6 +89,10 @@ void World::draw() {
     size = wolfVector.size();
     for (int i = 0; i < size; i++) {
         drawEntity(wolfVector[i]);
+    }
+    size = pondVector.size();
+    for (int i = 0; i < size; i++) {
+        drawEntity(pondVector[i]);
     }
 
     // draw Interface here (independent from game view)
@@ -109,6 +122,9 @@ int World::add_entity(Entity* e, Type t) {
     case GRASS:
         grassVector.push_back((grass*)e);
         return grassVector.size() - 1;
+    case POND:
+        pondVector.push_back((Pond*)e);
+        return pondVector.size() - 1;
     }
     return -1;
 }
