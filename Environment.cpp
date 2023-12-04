@@ -14,11 +14,6 @@ environment::environment(float x, float y) {
 environment::~environment() {
 
 }
-
-void grass::setHasEaten() {
-    hasEaten = true;
-}
-
 void grass::draw() {
     sf::RectangleShape shape_g(sf::Vector2f(2, 2));
     char grass_fresh[13][14] = {
@@ -66,7 +61,7 @@ void grass::draw() {
 
     sf::RectangleShape grass;
 
-    if (age > 800) {
+    if (count == 3) {
         shape_g.setFillColor(sf::Color(0, 144, 0));
         for (int i = 0; i < 13; i++) {
             for (int j = 0; j < 14; j++) {
@@ -78,7 +73,7 @@ void grass::draw() {
         }
     }
 
-    else if (400 < age && age <= 800) {
+    else if (count == 2) {
         shape_g.setFillColor(sf::Color(90, 144, 0));
         for (int i = 0; i < 13; i++) {
             for (int j = 0; j < 14; j++) {
@@ -89,7 +84,7 @@ void grass::draw() {
             }
         }
     }
-    else {
+    else if(count == 1) {
         shape_g.setFillColor(sf::Color(102, 51, 0));
         for (int i = 0; i < 13; i++) {
             for (int j = 0; j < 14; j++) {
@@ -102,22 +97,29 @@ void grass::draw() {
     }
 }
 
-void grass::minusAge() {
-    age--;
+void grass::minusCount() {
+    count--;
 }
 
-//void grass::respawn() {
-//    age = 1000 + rand() % 1000;
-//    findFullRabbit();
-//    //Vector2f full_rabbit_pos = full_rabbit->getPos();
-//    //setPos(full_rabbit_pos.x, full_rabbit_pos.y);
-//
-//}
+int signDecide() {
+    int signDecider = rand() % 2;
+    if (signDecider == 0) return 1;
+    else return -1;
+}
+
+void grass::respawn() {
+    count = 3;
+    //여기서 연못 주변에 나오게 
+    Entity* entity;
+    int pondCount = world.get_entity_num(POND);
+    entity = world.get_entity(rand() % pondCount, POND);
+    Vector2f randPondPos = entity->getPos();
+    setPos(randPondPos.x + signDecide() * rand() % 150, randPondPos.y + signDecide() * rand() % 150);
+}
 
 void grass::isDead() {
-    if (age < 0) {
-        // hunger수치가 가장 높은 토끼 주변에 생성
-        //respawn();
+    if (count <= 0) {
+        respawn();
     }
 }
 
@@ -125,25 +127,8 @@ int grass::get_type() {
     return GRASS;
 }
 
-//void grass::findFullRabbit()
-//{
-//    int maxHunger = -1000;
-//    for (int i = 0; i < world.get_entity_num(RABBIT); i++) {
-//        Entity* entity;
-//        entity = world.get_entity(i, RABBIT);
-//        //rabbit = (Rabbit*)(entity);
-//        // get hunger도 안됨
-//        //int rabitHunger = rabbit->get_hunger();
-//        if (rabitHunger > maxHunger) {
-//            maxHunger = rabitHunger;
-//            //full_rabbit = rabbit;
-//        }
-//    }
-//}
-
 void grass::update(int dt) {
     isDead();
-    minusAge();
 }
 
 grass::grass(float x, float y) :environment(x, y) {};
@@ -187,10 +172,6 @@ void Pond::draw() {
     }
 }
 
-void Pond::update(int dt) {
-    refillPond();
-}
-
 void Pond::set_transparency(sf::RectangleShape& pix) {
     if (pond_quantity == 2) pix.setFillColor(sf::Color(0, 102, 204, 255));
     if (pond_quantity == 1) pix.setFillColor(sf::Color(0, 102, 204, 100));
@@ -213,5 +194,9 @@ void Pond::refillPond() {
         }
     }
 }
+void Pond::update(int dt) {
+    refillPond();
+}
+
 
 Pond::Pond(float x, float y) :environment(x, y) {};

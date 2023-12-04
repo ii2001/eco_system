@@ -146,7 +146,8 @@ bool Rabbit::eatting(int dt) {
         return false;
     }
     else {
-        world.delete_entity(target_grass, GRASS);
+        target_grass->minusCount();
+        //world.delete_entity(target_grass, GRASS);
         target_grass = NULL;
         hunger += 10000;
         return true;

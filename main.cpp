@@ -27,12 +27,12 @@ int main()
 	world.setWindow(&window);
 
 	for (int i = 0; i < 3; i++) {
-		world.add_entity(new Pond(rand() % 1200, rand() % 800), POND);
-	}
-	for (int i = 0; i < 30; i++) {
-		world.add_entity(new grass(rand() % 1200, rand() % 800), GRASS);
+		world.add_entity(new Pond(rand() % 400 + 400 * i, rand() % 266 + 266 * i), POND);
 	}
 	for (int i = 0; i < 10; i++) {
+		world.add_entity(new grass(rand() % 1200, rand() % 800), GRASS);
+	}
+	for (int i = 0; i < 20; i++) {
 		world.add_entity(new Rabbit(rand() % 1200, rand() % 800), RABBIT);
 		//rabbits.push_back(Rabbit(rand() % 1200, rand() % 800));
 	}

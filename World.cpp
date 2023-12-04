@@ -166,6 +166,7 @@ Entity* World::get_entity(unsigned int index, Type t) {
     case RABBIT: return rabbitVector[index];
     case WOLF: return wolfVector[index];
     case GRASS: return grassVector[index];
+    case POND: return pondVector[index];
     }
     return NULL;
 }
@@ -181,6 +182,8 @@ int World::get_entity_num(Type t) {
         return wolfVector.size();
     case GRASS:
         return grassVector.size();
+    case POND:
+        return pondVector.size();
     }
     return -1;
 }
