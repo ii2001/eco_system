@@ -6,7 +6,8 @@ World::World()
 {
     filter = RectangleShape(sf::Vector2f(0.0, 0.0));
     filter.setSize(sf::Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT));
-    filter.setFillColor(Color(0, 0, 0, 125));
+    color = Color(0, 0, 0, 0);
+    filter.setFillColor(color);
 }
 
 World::~World() {
@@ -99,8 +100,16 @@ void World::draw() {
     // draw Interface here (independent from game view)
     camera.setView(INTERFACE);
 
-    if (isNight)
-        window->draw(filter);
+    if (isNight && color.a < 125) {
+        color.a += speed;
+        filter.setFillColor(color);
+    }
+    else if (!isNight && color.a > 0) {
+        color.a -= speed;
+        filter.setFillColor(color);
+    }
+
+    window->draw(filter);
 }
 
 void World::drawEntity(Entity* e) {
