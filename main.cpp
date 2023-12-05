@@ -44,10 +44,15 @@ int main()
 	Vector2i mouse_position;
 	//bool is_clicked = false;
 
+	window.setKeyRepeatEnabled(false);
+	
 	// MAIN LOOP
-	while (window.isOpen())
+	while (window.isOpen())		
 	{
 		camera.setView(GAME);
+		
+		bool rabbitSpawned = false;
+		bool wolfSpawned = false;
 
 		// check all the window's events that were triggered since the last iteration of the loop
 		Event event;
@@ -86,11 +91,13 @@ int main()
 
 			Vector2f worldPos = (*world.window).mapPixelToCoords(mousePos);
 
-			if (Keyboard::isKeyPressed(Keyboard::R)) {
+			if (Keyboard::isKeyPressed(Keyboard::R) && !rabbitSpawned) {
 				world.add_entity(new Rabbit(worldPos.x, worldPos.y), RABBIT);
+				rabbitSpawned = true;
 			}
-			else if (Keyboard::isKeyPressed(Keyboard::W)) {
+			else if (Keyboard::isKeyPressed(Keyboard::W) && !wolfSpawned) {
 				world.add_entity(new Wolf(worldPos.x, worldPos.y), RABBIT);
+				wolfSpawned = true;
 			}
 		}
 

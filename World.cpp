@@ -38,6 +38,7 @@ void World::update(int dt) {
     if (speed == 0)
         return;
 
+    dt *= speed;
     frame += speed;
 
     if (frame >= 25) {
