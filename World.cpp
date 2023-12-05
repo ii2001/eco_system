@@ -1,5 +1,6 @@
 #include "World.h"
 #include "Camera.h"
+#include "Rabbit.h"
 
 World::World()
     :day(0), time(0), frame(0), speed(1), isNight(0)
@@ -54,7 +55,17 @@ void World::update(int dt) {
         time = 0;
     }
 
-    int size = rabbitVector.size();
+    int size = grassVector.size();
+    for (int i = 0; i < size; i++) {
+        grassVector[i]->update(dt);
+    }
+
+    size = pondVector.size();
+    for (int i = 0; i < size; i++) {
+        pondVector[i]->update(dt);
+    }
+
+    size = rabbitVector.size();
     for (int i = 0; i < size; i++) {
         rabbitVector[i]->update(dt);
     }
@@ -64,13 +75,15 @@ void World::update(int dt) {
         wolfVector[i]->update(dt);
     }
 
-    size = grassVector.size();
-    for (int i = 0; i < size; i++) {
-        grassVector[i]->update(dt);
-    }
-    size = pondVector.size();
-    for (int i = 0; i < size; i++) {
-        pondVector[i]->update(dt);
+    size = rabbitVector.size();
+    for (int i = 0; i < size;) {
+        Rabbit* r = (Rabbit*)rabbitVector[i];
+        if (r->is_deleting()) {
+            delete r;
+            size--;
+        }
+        else
+            i++;
     }
 }
 

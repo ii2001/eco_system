@@ -8,11 +8,19 @@ Rabbit::Rabbit(float x, float y) :Animal(x, y) {
     this->target_grass = NULL;
     this->target_mate = NULL;
     this->type = RABBIT;
+    this->die_timer = 0;
 };
 
 void Rabbit::draw() {
     char* curr_arr = NULL;
+
+    if (state == DIE) {
+        draw_arr((char*)rabbit_die, 19, 16, 255 * (1 - die_timer / 5000.0));
+        return;
+    }
+
     check_dir();
+
     if (direction == RIGHT) // move right
     {
         if (!jump) // jump x
@@ -90,6 +98,11 @@ void Rabbit::draw() {
 }
 
 void Rabbit::update(int dt) {
+    if (state == DIE) {
+        die_timer += dt;
+        return;
+    }
+
     hunger -= dt;
     thirst -= dt;
 
@@ -285,6 +298,10 @@ int Rabbit::get_type() {
 
 float Rabbit::get_speed() {
     return speed;
+}
+
+bool Rabbit::is_deleting() {
+    return (die_timer >= 5000);
 }
 
 const char Rabbit::rabbit_left[19][16] = { {'0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'},
