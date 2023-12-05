@@ -25,6 +25,8 @@ private:
 
     RectangleShape filter;
 
+    Color color;
+
     void drawEntity(Entity* e);
 
 public:

@@ -38,6 +38,7 @@ int main()
 	}
 	world.add_entity(new Wolf(600.0, 800.0), WOLF);
 
+
 	camera.setFocus((Animal*)world.get_entity(0, WOLF));
 
 	// MOUSE

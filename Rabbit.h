@@ -25,6 +25,8 @@ private:
     int mate_progress = 0;
     bool find_predator = false;
 
+    int die_timer;
+
     Animal* target_wolf;
     grass* target_grass;
     Rabbit* target_mate;
@@ -55,4 +57,5 @@ public:
 
     int get_type();
     float get_speed();
+    bool is_deleting();
 };

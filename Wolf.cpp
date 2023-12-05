@@ -9,11 +9,11 @@ Wolf::Wolf(float x, float y) : Animal(x, y) {
 }
 
 bool Wolf::find_rabbit() {
-    Entity* entity;
+    Animal* entity;
     for (int i = 0; i < world.get_entity_num(RABBIT); i++) {
-        entity = world.get_entity(i, RABBIT);
+        entity = (Animal*)world.get_entity(i, RABBIT);
         // check rabbit 
-        if (this->distance(*entity) < detect_range) {
+        if (this->distance(*entity) < detect_range && entity->get_state() != DIE) {
             target_rabbit = (Animal*)(entity);
             return true;
         }
@@ -39,7 +39,7 @@ bool Wolf::hunt(int dt) {
         return false;
     }
     else {
-        delete target_rabbit;
+        target_rabbit->setState(DIE);
         target_rabbit = NULL;
         hunger += 5000;
         return true;

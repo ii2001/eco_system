@@ -1,12 +1,14 @@
 #include "World.h"
 #include "Camera.h"
+#include "Rabbit.h"
 
 World::World()
     :day(0), time(0), frame(0), speed(1), isNight(0)
 {
     filter = RectangleShape(sf::Vector2f(0.0, 0.0));
     filter.setSize(sf::Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT));
-    filter.setFillColor(Color(0, 0, 0, 125));
+    color = Color(0, 0, 0, 0);
+    filter.setFillColor(color);
 }
 
 World::~World() {
@@ -53,7 +55,17 @@ void World::update(int dt) {
         time = 0;
     }
 
-    int size = rabbitVector.size();
+    int size = grassVector.size();
+    for (int i = 0; i < size; i++) {
+        grassVector[i]->update(dt);
+    }
+
+    size = pondVector.size();
+    for (int i = 0; i < size; i++) {
+        pondVector[i]->update(dt);
+    }
+
+    size = rabbitVector.size();
     for (int i = 0; i < size; i++) {
         rabbitVector[i]->update(dt);
     }
@@ -63,13 +75,15 @@ void World::update(int dt) {
         wolfVector[i]->update(dt);
     }
 
-    size = grassVector.size();
-    for (int i = 0; i < size; i++) {
-        grassVector[i]->update(dt);
-    }
-    size = pondVector.size();
-    for (int i = 0; i < size; i++) {
-        pondVector[i]->update(dt);
+    size = rabbitVector.size();
+    for (int i = 0; i < size;) {
+        Rabbit* r = (Rabbit*)rabbitVector[i];
+        if (r->is_deleting()) {
+            delete r;
+            size--;
+        }
+        else
+            i++;
     }
 }
 
@@ -99,8 +113,16 @@ void World::draw() {
     // draw Interface here (independent from game view)
     camera.setView(INTERFACE);
 
-    if (isNight)
-        window->draw(filter);
+    if (isNight && color.a < 125) {
+        color.a += speed;
+        filter.setFillColor(color);
+    }
+    else if (!isNight && color.a > 0) {
+        color.a -= speed;
+        filter.setFillColor(color);
+    }
+
+    window->draw(filter);
 }
 
 void World::drawEntity(Entity* e) {
