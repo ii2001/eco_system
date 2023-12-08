@@ -41,7 +41,7 @@ bool Wolf::hunt(int dt) {
     else {
         target_rabbit->setState(DIE);
         target_rabbit = NULL;
-        hunger += 5000;
+        hunger += 9000;
         return true;
     }
 }

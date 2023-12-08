@@ -80,7 +80,7 @@ int main()
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
 				world.set_speed(2);
-			}
+			}	
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) {
 				world.set_speed(3);
 			}
@@ -97,7 +97,7 @@ int main()
 				rabbitSpawned = true;
 			}
 			else if (Keyboard::isKeyPressed(Keyboard::W) && !wolfSpawned) {
-				world.add_entity(new Wolf(worldPos.x, worldPos.y), RABBIT);
+				world.add_entity(new Wolf(worldPos.x, worldPos.y), WOLF);
 				wolfSpawned = true;
 			}
 		}

@@ -3,6 +3,7 @@
 #include "EcoSystem.h"
 #include "Entity.h"
 #include "Animal.h"
+#include "Rabbit.h"
 #include "Wolf.h"
 #include "Environment.h"
 
@@ -18,7 +19,7 @@ private:
 
     bool isNight;
 
-    vector<Animal*> rabbitVector;
+    vector<Rabbit*> rabbitVector;
     vector<Wolf*> wolfVector;
     vector<grass*> grassVector;
     vector<Pond*> pondVector;

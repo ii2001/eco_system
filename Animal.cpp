@@ -29,16 +29,12 @@ bool Animal::move(int dt) {
     }
 }
 
-// �� �ڴ� �Լ� ����
 void Animal::sleep() {
     if (desire_for_sleep < 1) {
         state = MOVING;
     }
-    // ���� �ڴ� ���� ����
-    // ���⿡ �� �ڴ� ��� �ֱ�
 }
 
-// moveTo �Լ��� �̿��Ͽ� ������ Ư�� ��ġ�� �̵���Ű�� �Լ� �߰�
 bool Animal::moveTo(int dt, const Vector2f& targetPos) {
     float delta_x = targetPos.x - pos.x;
     float delta_y = targetPos.y - pos.y;
@@ -175,6 +171,7 @@ int Animal::get_hunger() {
 }
 
 int Animal::get_thirsty() {
+    printf("water\n");
     return thirst;
 }
 

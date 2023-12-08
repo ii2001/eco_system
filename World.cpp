@@ -96,6 +96,11 @@ void World::draw() {
         drawEntity(grassVector[i]);
     }
 
+    size = pondVector.size();
+    for (int i = 0; i < size; i++) {
+        drawEntity(pondVector[i]);
+    }
+
     size = rabbitVector.size();
     for (int i = 0; i < size; i++) {
         drawEntity(rabbitVector[i]);
@@ -104,10 +109,6 @@ void World::draw() {
     size = wolfVector.size();
     for (int i = 0; i < size; i++) {
         drawEntity(wolfVector[i]);
-    }
-    size = pondVector.size();
-    for (int i = 0; i < size; i++) {
-        drawEntity(pondVector[i]);
     }
 
     // draw Interface here (independent from game view)
@@ -137,7 +138,7 @@ void World::setWindow(RenderWindow* window) {
 int World::add_entity(Entity* e, Type t) {
     switch (t) {
     case RABBIT: 
-        rabbitVector.push_back((Animal*)e);
+        rabbitVector.push_back((Rabbit*)e);
         return rabbitVector.size() - 1;
     case WOLF:
         wolfVector.push_back((Wolf*)e);
