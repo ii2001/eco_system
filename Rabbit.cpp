@@ -270,7 +270,7 @@ bool Rabbit::find_mate() {
     for (int i = 0; i < world.get_entity_num(RABBIT); i++) {
         entity = (Rabbit *)world.get_entity(i, RABBIT);
         distance = this->distance(*entity);
-        if ((distance < mate_detect_range)&&(distance != 0)) {
+        if ((distance < mate_detect_range) && (distance != 0) && entity->state != DIE) {
             if (entity->state != MATING) {
                 target_mate = (Rabbit*)(entity);
                 return true;
