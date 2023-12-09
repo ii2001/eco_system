@@ -8,11 +8,10 @@
 class Rabbit : public Animal
 {
 private:
-    static const int max_hunger = 10000;
-    static const int max_thirsty = 10000;
+    static const int max_hunger = 50000;
     static const int speed = 100.0;
 
-    float mate_detect_range = 1000.0;
+    float mate_detect_range = 500.0;
     float detect_range = 300.0;
     float walk_mult = 0.5;
     float run_mult = 2.3;
@@ -23,9 +22,9 @@ private:
     int temp = 0;
     int temp_mate = 0;
     int mate_progress = 0;
-    bool find_predator = false;
 
     int die_timer;
+    bool pond_fail;
 
     Animal* target_wolf;
     grass* target_grass;
@@ -46,9 +45,9 @@ public:
     Rabbit(float x, float y);
 
     bool find_grass();
-    //bool find_pond();
     bool find_wolf();
     bool find_mate();
+    
 
     bool eatting(int dt);
     bool mate(int dt);

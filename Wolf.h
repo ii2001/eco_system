@@ -7,7 +7,7 @@
 
 class Wolf : public Animal {
 private:
-    static const int max_hunger = 10000;
+    static const int max_hunger = 100000;
     static const int speed = 150.0;
 
     float detect_range = 1200.0;

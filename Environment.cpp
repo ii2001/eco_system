@@ -1,9 +1,6 @@
 #include "Environment.h"
 #include "World.h"
 
-
-
-
 environment::environment(Vector2f pos) {
     this->setPos(pos);
 }
@@ -78,12 +75,8 @@ int signDecide() {
 
 void grass::respawn() {
     count = 3;
-    //여기서 연못 주변에 나오게 
-    Entity* entity;
-    int pondCount = world.get_entity_num(POND);
-    entity = world.get_entity(rand() % pondCount, POND);
-    Vector2f randPondPos = entity->getPos();
-    setPos(randPondPos.x + signDecide() * rand() % 150, randPondPos.y + signDecide() * rand() % 150);
+    Vector2f temp_pos = parent_pond->getPos();
+    setPos(temp_pos.x + signDecide() * rand() % 300, temp_pos.y + signDecide() * rand() % 300);
 }
 
 void grass::isDead() {
@@ -101,12 +94,6 @@ void grass::update(int dt) {
 }
 
 grass::grass(float x, float y) :environment(x, y) {};
-
-
-
-
-
-
 
 void Pond::draw() {
     sf::RectangleShape shape_p(sf::Vector2f(5, 5));
@@ -158,8 +145,17 @@ void Pond::update(int dt) {
     refillPond();
 }
 
+void Pond::createGrass() {
+    grass* temp_grass = new grass(pos.x + rand() % 600 - 300, pos.y + rand() % 600 - 300);
+    temp_grass->parent_pond = this;
+    world.add_entity(temp_grass, GRASS);
+}
 
-Pond::Pond(float x, float y) :environment(x, y) {};
+Pond::Pond(float x, float y) :environment(x, y) {
+    for (int i = 0; i < 10; i++) {
+        createGrass();
+    }
+};
 
 const char grass::grass_fresh[13][14] = {
 {'0', '3', '3', '0', '0', '0', '3', '3', '0', '0', '3', '0', '0', '0'},
