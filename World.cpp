@@ -41,16 +41,13 @@ void World::update(int dt) {
         return;
 
     dt *= speed;
-    frame += speed;
+    time += dt;
 
-    if (frame >= 25) {
-        time += 1;
-        if (time % 12 == 0)
-            isNight = !isNight;
-        frame = 0;
+    if (time >= 60000) {
+        isNight = true;
     }
-
-    if (time >= 24) {
+    if (time >= 100000) {
+        isNight = false;
         day += 1;
         time = 0;
     }

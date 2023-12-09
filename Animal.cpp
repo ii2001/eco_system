@@ -3,10 +3,12 @@
 
 Animal::Animal(Vector2f pos) {
     this->setPos(pos);
+    this->target_pond = NULL;
 }
 
 Animal::Animal(float x, float y) {
     this->setPos(x, y);
+    this->target_pond = NULL;
 }
 
 Animal::~Animal() {
@@ -19,19 +21,13 @@ bool Animal::move(int dt) {
     float vector_size = sqrt(pow(delta_x, 2) + pow(delta_y, 2));
     float speed = get_speed();
 
-    if (vector_size < 10) {
+    if (vector_size < 20) {
         return true;
     }
     else {
         pos.x += speed * dt * delta_x / vector_size / 1000;
         pos.y += speed * dt * delta_y / vector_size / 1000;
         return false;
-    }
-}
-
-void Animal::sleep() {
-    if (desire_for_sleep < 1) {
-        state = MOVING;
     }
 }
 
@@ -163,6 +159,42 @@ void Animal::check_dir() {
     }
 }
 
+bool Animal::drink(int dt) {
+    if (move(dt)) {
+        target_pond = NULL;
+        thirst = max_thirst;
+        return true;
+    }
+    else {
+        target = target_pond->getPos();
+        return false;
+    }
+}
+
+bool Animal::find_pond() {
+    Entity* entity = world.get_entity(0, POND);
+    float distance = this->distance(*entity);
+    target_pond = (Pond*)entity;
+
+    for (int i = 1; i < world.get_entity_num(POND); i++) {
+        entity = world.get_entity(i, POND);
+        if (this->distance(*entity) < distance) {
+            target_pond = (Pond*)entity;
+        }
+    }
+    target = target_pond->getPos();
+    return true;
+}
+
+bool Animal::find_rand_pond() {
+    Entity* entity = world.get_entity(rand() % 4, POND);
+    float distance = this->distance(*entity);
+    target_pond = (Pond*)entity;
+    target = target_pond->getPos();
+    return true;
+}
+
+
 int Animal::get_state() {
     return state;
 }
@@ -170,14 +202,12 @@ int Animal::get_hunger() {
     return hunger;
 }
 
-int Animal::get_thirsty() {
-    printf("water\n");
+int Animal::get_thirst() {
     return thirst;
 }
 
 void Animal::setState(AnimalState state) {
     this->state = state;
 }
-
 
 int Animal::get_dir() { return direction; }

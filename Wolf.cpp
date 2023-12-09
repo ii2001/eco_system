@@ -3,9 +3,11 @@
 
 Wolf::Wolf(float x, float y) : Animal(x, y) {
     this->hunger = max_hunger;
+    this->thirst = max_thirst;
     this->target_rabbit = NULL;
     this->type = WOLF;
     this->rect = FloatRect(0, 0, 70, 70);
+    this->state = IDLE;
 }
 
 bool Wolf::find_rabbit() {
@@ -33,16 +35,17 @@ bool Wolf::follow(int dt) {
 
 bool Wolf::hunt(int dt) {
     float distance = this->distance(*target_rabbit);
-    if (distance > 10) {
-        target = target_rabbit->getPos();
-        move(dt * run_mult);
-        return false;
+    if (move(dt * run_mult)) {
+        if (target_rabbit->get_state() != DIE) {
+            target_rabbit->setState(DIE);
+            hunger += 35000;
+        }
+        target_rabbit = NULL;
+        return true;
     }
     else {
-        target_rabbit->setState(DIE);
-        target_rabbit = NULL;
-        hunger += 9000;
-        return true;
+        target = target_rabbit->getPos();
+        return false;
     }
 }
 
@@ -50,6 +53,16 @@ void Wolf::draw() {
     char* curr_arr = NULL;
     check_dir();
     switch (state) {
+    case SLEEP:
+        if (direction == RIGHT) {
+            curr_arr = (char*)(wolf_right_sleep);
+            draw_arr(curr_arr, 62, 50);
+        }
+        else {
+            curr_arr = (char*)(wolf_left_sleep);
+            draw_arr(curr_arr, 62, 50);
+        }
+        break;
     case IDLE:
         if (direction == RIGHT)
         {
@@ -137,10 +150,31 @@ void Wolf::draw() {
 
 void  Wolf::update(int dt) {
     hunger -= dt;
-    if (hunger < 3000) {
-        if (target_rabbit == NULL) {
-            if (find_rabbit()) {
-                state = FOLLOWING;
+    thirst -= dt;
+    if (state == IDLE) {
+        if (world.get_time() > 70000) {
+            state = SLEEP;
+        }
+        target_pond = NULL;
+        target_rabbit = NULL;
+    }
+    if (state == SLEEP) {
+        if (world.get_time() <= 1000) {
+            state = IDLE;
+        }
+    } else {
+        if (thirst < 70000) {
+            if (target_pond == NULL) {
+                if (find_rand_pond()) {
+                    state = THIRSTY;
+                }
+            }
+        }
+        else if (hunger < 70000) {
+            if (target_rabbit == NULL) {
+                if (find_rabbit()) {
+                    state = FOLLOWING;
+                }
             }
         }
     }
@@ -151,7 +185,7 @@ void  Wolf::update(int dt) {
         if (temp >= 2000) {
             //set random target
             temp = 0;
-            target = Vector2f(pos.x + rand() % 500 - 250, pos.y + rand() % 500 - 250);
+            target = Vector2f(pos.x + rand() % 600 - 300, pos.y + rand() % 600 - 300);
             state = MOVING;
         }
         break;
@@ -161,7 +195,19 @@ void  Wolf::update(int dt) {
             walk_frame = 0;
             is_walk = !is_walk;
         }
-        move(dt); 
+        if (move(dt)) {
+            state = IDLE;
+        }
+        break;
+    case THIRSTY:
+        walk_frame += dt;
+        if (walk_frame > 600) {
+            walk_frame = 0;
+            is_walk = !is_walk;
+        }
+        if (drink(dt)) {
+            state = IDLE;
+        }
         break;
     case FOLLOWING:
         walk_frame += dt;

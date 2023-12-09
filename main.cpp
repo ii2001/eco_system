@@ -26,12 +26,14 @@ int main()
 	RenderWindow window(sf::VideoMode(1200, 800), "My window");
 	world.setWindow(&window);
 
-	for (int i = 0; i < 3; i++) {
-		world.add_entity(new Pond(rand() % 400 + 400 * i, rand() % 266 + 266 * i), POND);
-	}
-	for (int i = 0; i < 10; i++) {
+	world.add_entity(new Pond(0.0, 0.0), POND);
+	world.add_entity(new Pond(800.0, 0.0), POND);
+	world.add_entity(new Pond(0.0, 800.0), POND);
+	world.add_entity(new Pond(800.0, 800.0), POND);
+	
+	/*for (int i = 0; i < 10; i++) {
 		world.add_entity(new grass(rand() % 1200, rand() % 800), GRASS);
-	}
+	}*/
 	for (int i = 0; i < 20; i++) {
 		world.add_entity(new Rabbit(rand() % 1200, rand() % 800), RABBIT);
 		//rabbits.push_back(Rabbit(rand() % 1200, rand() % 800));
@@ -128,15 +130,18 @@ int main()
 		world.draw();
 
 		// debug
+		debug.print("time", world.get_time() / 1000);
+		debug.print("fps", fps);
+		debug.print("# of Rabbits", world.get_entity_num(RABBIT));
 		if (camera.getFocus() != NULL) {
 			Animal* selected = camera.getFocus();
 
 			debug.print("selected_x", selected->getPos().x);
 			debug.print("selected_y", selected->getPos().y);
 			debug.print("selected_state", selected->get_state());
-			debug.print("selcted_hunger", selected->get_hunger());
+			debug.print("selcted_hunger", selected->get_hunger()/1000);
+			debug.print("selcted_thirst", selected->get_thirst() / 1000);
 		}
-		debug.print("fps", fps);
 		debug.finish();
 
 		//console output

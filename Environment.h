@@ -25,8 +25,12 @@ private:
     static const char grass_fresh[13][14];
     static const char grass_normal[13][14];
     static const char grass_dying[13][14];
+
+    
 public:
     grass(float x, float y);
+
+    environment* parent_pond;
 
     void draw() override;
     void minusCount();
@@ -47,6 +51,7 @@ public:
 
     void draw();
     void refillPond();
+    void createGrass();
     void resetCooltime();
     int get_type();
     void update(int dt);

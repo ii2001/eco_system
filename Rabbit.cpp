@@ -3,19 +3,21 @@
 
 Rabbit::Rabbit(float x, float y) :Animal(x, y) {
     this->hunger = max_hunger;
-    this->thirst = max_thirsty;
+    this->thirst = max_thirst;
     this->target_wolf = NULL;
     this->target_grass = NULL;
     this->target_mate = NULL;
+    
     this->type = RABBIT;
     this->die_timer = 0;
+    this->state = IDLE;
 };
 
 void Rabbit::draw() {
     char* curr_arr = NULL;
 
     if (state == DIE) {
-        draw_arr((char*)rabbit_die, 19, 16, 255 * (1 - die_timer / 5000.0));
+        draw_arr((char*)rabbit_die, 16, 19, 255 * (1 - die_timer / 5000.0));
         return;
     }
 
@@ -52,7 +54,7 @@ void Rabbit::draw() {
     if (curr_arr != NULL) {
         draw_arr(curr_arr, 16, 19);
     }
-    if (find_predator == true)
+    if (state == RUNNING_AWAY)
     {
         for (int i = 0; i < 9; i++)
         {
@@ -102,56 +104,76 @@ void Rabbit::update(int dt) {
         die_timer += dt;
         return;
     }
+    if (state == IDLE) {
+        if (world.get_time() > 70000) {
+            state = SLEEP;
+        }
+
+        target_pond = NULL;
+        target_grass = NULL;
+        target_wolf = NULL;
+        target_mate = NULL;
+    }
 
     hunger -= dt;
     thirst -= dt;
+    temp_mate += dt;
 
-    /*if (hunger < 0) {
-        world.delete_entity(this, RABBIT);
-        cout << "dead";
-    }*/
-    find_predator = false;
     if (find_wolf()) {
         //set target
-        find_predator = true;
         Vector2f wolf_pos = target_wolf->getPos();
-        Vector2f vector = Vector2f(wolf_pos.x - pos.x, wolf_pos.y - pos.y);
+        Vector2f vector = Vector2f(1.5*(wolf_pos.x - pos.x), 1.5*(wolf_pos.y - pos.y));
         target = pos - vector;
         state = RUNNING_AWAY;
+    }
+    else if (state == SLEEP) {
+        if (world.get_time() <= 1000) {
+            state = IDLE;
+        }
     }
     else if (state == MATING) {
         //maintain state
         temp_mate -= dt;
-    }
-    /*else if (thirst < 3000) {
-        if (target_pond == NULL) {
-            if (find_pond()) {
-                state = THIRST;
+    } 
+    else if (state != RUNNING_AWAY) {
+        if (thirst < 70000) {
+            if (target_pond == NULL) {
+                if (pond_fail) {
+                    find_rand_pond();
+                    pond_fail = true;
+                    state = THIRSTY;
+                }
+                else {
+                    find_pond();
+                    pond_fail = true;
+                    state = THIRSTY;
+                }
+                
             }
         }
-    }*/
-    else if (hunger < 3000) {
-        if (target_grass == NULL) {
-            if (find_grass()) {
-                state = HUNGRY;
+        else if (hunger < 30000) {
+            if (target_grass == NULL) {
+                if (find_grass()) {
+                    state = HUNGRY;
+                }
+            }
+        }
+        //first mate
+        else if (temp_mate > 175000) {
+            temp_mate = 0;
+            if (find_mate()) {
+                target_mate->mate_progress = 0;
+                target_mate->temp_mate = 0;
+                target_mate->state = MATING;
+                target_mate->target_mate = this;
+                target_mate->target = this->getPos();
+                state = MATING;
+                mate_progress = 0;
+                target = target_mate->getPos();
             }
         }
     }
 
-    temp_mate += dt;
-    //first mate
-    if (temp_mate > 20000) {
-        temp_mate = 0;
-        if (find_mate()) {
-            target_mate->mate_progress = 0;
-            target_mate->temp_mate = 0;
-            target_mate->state = MATING;
-            target_mate->target_mate = this;
-            state = MATING;
-            mate_progress = 0;
-        }
-    }
-    
     switch (state) {
     case IDLE:
         temp += dt;
@@ -168,7 +190,10 @@ void Rabbit::update(int dt) {
             jump_frame = 0;
             jump = !jump;
         }
-        if (move(dt)) { jump = false; }
+        if (move(dt)) { 
+            state = IDLE;
+            jump = false; 
+        }
         break;
     case RUNNING_AWAY:
         jump_frame += dt;
@@ -177,6 +202,18 @@ void Rabbit::update(int dt) {
             jump = !jump;
         }
         if (move(dt * run_mult)) {
+            state = IDLE;
+            jump = false;
+        }
+        break;
+    case THIRSTY:
+        jump_frame += dt;
+        if (jump_frame > 500) {
+            jump_frame = 0;
+            jump = !jump;
+        }
+        if (drink(dt)) {
+            pond_fail = false;
             state = IDLE;
             jump = false;
         }
@@ -195,7 +232,19 @@ void Rabbit::update(int dt) {
     case MATING:
         if (mate(dt)) {
             // mate success
-            cout << "mate success" << endl;
+            if (world.get_entity_num(RABBIT)<20) {
+                cout << "mate success" << endl;
+                world.add_entity(new Rabbit(pos.x, pos.y), RABBIT);
+            }
+            else {
+                if ((rand() % 100) < 50) {
+                    cout << "mate success-" << endl;
+                    world.add_entity(new Rabbit(pos.x, pos.y), RABBIT);
+                }
+                else {
+                    cout << "mate fail" << endl;
+                }
+            }        
             target_mate->mate_progress = 0;
             target_mate->state = IDLE;
             target_mate->target_mate = NULL;
@@ -209,33 +258,37 @@ bool Rabbit::eatting(int dt) {
     if (target_grass == NULL) {
         return true;
     }
-    if (this->distance(*target_grass) > 10) {
-        target = target_grass->getPos();
-        move(dt);
-        return false;
-    }
-    else {
+    if (move(dt)) {
         target_grass->minusCount();
         target_grass = NULL;
-        hunger += 10000;
+        hunger = max_hunger;
         return true;
+    }
+    else {
+        target = target_grass->getPos();
+        return false;
     }
 }
 
 bool Rabbit::mate(int dt) {
-    if (distance(*target_mate) > 10) {
-        target = target_mate->getPos();
-        move(dt);
-    }
-    else {
+    if (move(dt)) {
         if (mate_progress > 3000) {
             mate_progress = 0;
             return true;
-        } else if (mate_progress == 0) {
+        }
+        else if (mate_progress == 0) {
             direction = target_mate->get_dir();
             jump = false;
         }
         mate_progress += dt;
+    }
+    else {
+        jump_frame += dt;
+        if (jump_frame > 500) {
+            jump_frame = 0;
+            jump = !jump;
+        }
+        target = target_mate->getPos();
     }
     return false;
 }
@@ -279,18 +332,6 @@ bool Rabbit::find_mate() {
     }
     return false;
 }
-
-//bool Rabbit::find_pond() {
-//    Entity* entity;
-//    for (int i = 0; i < world.get_entity_num(POND); i++) {
-//        entity = world.get_entity(i, POND);
-//        if (this->distance(*entity) < detect_range) {
-//            target_pond = (Pond*)(entity);
-//            return true;
-//        }
-//    }
-//    return false;
-//}
 
 int Rabbit::get_type() {
     return RABBIT;
