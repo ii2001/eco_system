@@ -141,6 +141,10 @@ void Pond::refillPond() {
         }
     }
 }
+void Pond::setQuantity()
+{
+    pond_quantity = 0;
+}
 void Pond::update(int dt) {
     refillPond();
 }

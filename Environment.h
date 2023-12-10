@@ -51,6 +51,7 @@ public:
 
     void draw();
     void refillPond();
+    void setQuantity();
     void createGrass();
     void resetCooltime();
     int get_type();

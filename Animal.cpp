@@ -161,6 +161,7 @@ void Animal::check_dir() {
 
 bool Animal::drink(int dt) {
     if (move(dt)) {
+        target_pond->setQuantity();
         target_pond = NULL;
         thirst = max_thirst;
         return true;
